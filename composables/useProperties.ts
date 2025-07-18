@@ -88,14 +88,15 @@ export const useProperties = () => {
       
       if (response.success) {
         allProperties.value = response.properties;
-        lastUpdated.value = response.lastUpdated;
-        
+        if ('lastUpdated' in response && response.lastUpdated) {
+          lastUpdated.value = response.lastUpdated;
+        }
         // Initialize filtered properties
         if (currentView.value === 'list') {
           filteredProperties.value = [...allProperties.value];
         }
       } else {
-        error.value = response.error || 'Failed to fetch properties';
+        error.value = ('error' in response && response.error) ? response.error : 'Failed to fetch properties';
       }
     } catch (err) {
       console.error('Error fetching properties:', err);
@@ -121,6 +122,8 @@ export const useProperties = () => {
 
   const showAllProperties = () => {
     currentView.value = 'list';
+    searchTerm.value = '';
+    selectedPhase.value = '';
     filteredProperties.value = [...allProperties.value];
   };
 
@@ -132,6 +135,8 @@ export const useProperties = () => {
 
   const showPropertiesByCategory = (category: string) => {
     currentView.value = 'list';
+    searchTerm.value = '';
+    selectedPhase.value = '';
     if (category === 'Construction') {
       filteredProperties.value = allProperties.value.filter(p => 
         ['Sheetrock', 'Flatwork', 'Roof', 'Final'].includes(p.phase)
