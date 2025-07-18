@@ -22,9 +22,9 @@
           </div>
         </div>
         <nav class="flex space-x-8">
-          <NuxtLink to="/" class="nav-link text-white hover:text-green-100 font-medium py-2">
+          <button @click="$emit('click-dashboard')" class="nav-link text-white hover:text-green-100 font-medium py-2">
             <i class="fas fa-chart-pie mr-2"></i>Dashboard
-          </NuxtLink>
+          </button>
           <button @click="$emit('show-all')" class="nav-link text-white hover:text-green-100 font-medium py-2">
             <i class="fas fa-list mr-2"></i>All Properties
           </button>

@@ -4,6 +4,7 @@
       @show-all="showAllPropertiesAndScroll"
       @show-construction="showConstructionAndScroll"
       @show-completed="showCompletedAndScroll"
+      @click-dashboard="showPortfolioOverviewAndScroll"
     />
 
     <!-- Main Content -->
@@ -319,8 +320,14 @@ const showConstructionAndScroll = () => {
   showPropertiesByCategory('Construction');
   scrollToList();
 };
+const showPortfolioOverviewAndScroll = () => {
+  showPortfolioOverview();
+  nextTick(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+};
 const showCompletedAndScroll = () => {
-  showPropertiesByCategory('Completed');
+  showPropertiesByCategory('Completed', ['Listed', 'Sold', 'Pending']);
   scrollToList();
 };
 function scrollToList() {

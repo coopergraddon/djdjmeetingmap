@@ -133,10 +133,14 @@ export const useProperties = () => {
     searchTerm.value = '';
   };
 
-  const showPropertiesByCategory = (category: string) => {
+  const showPropertiesByCategory = (category: string, phases?: string[]) => {
     currentView.value = 'list';
     searchTerm.value = '';
     selectedPhase.value = '';
+    if (phases && phases.length > 0) {
+      filteredProperties.value = allProperties.value.filter(p => phases.includes(p.phase));
+      return;
+    }
     if (category === 'Construction') {
       filteredProperties.value = allProperties.value.filter(p => 
         ['Sheetrock', 'Flatwork', 'Roof', 'Final'].includes(p.phase)
