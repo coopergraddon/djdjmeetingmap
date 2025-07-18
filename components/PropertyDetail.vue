@@ -66,7 +66,7 @@
             <span class="text-gray-600 font-medium">Target Completion:</span>
             <span class="font-bold text-gray-900">{{ property.deadline }}</span>
           </div>
-          <div v-if="property.completed" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+          <div v-if="property.completed && isValidCompletedDate(property.completed)" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
             <span class="text-gray-600 font-medium">Completed:</span>
             <span class="font-bold text-gray-900">{{ property.completed }}</span>
           </div>
@@ -186,4 +186,10 @@ const projectDurationDays = computed(() => {
   const diff = today - start;
   return Math.floor(diff / (1000 * 60 * 60 * 24));
 });
+
+function isValidCompletedDate(dateStr) {
+  if (!dateStr) return false;
+  const year = Number(dateStr.split(/[\/-]/)[2]);
+  return year && year >= 2000;
+}
 </script> 
