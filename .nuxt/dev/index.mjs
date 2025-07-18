@@ -5,6 +5,7 @@ import { resolve, dirname, join } from 'node:path';
 import nodeCrypto from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
 import { escapeHtml } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/@vue/shared/dist/shared.cjs.js';
+import { promises, readFileSync } from 'node:fs';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/ufo/dist/index.mjs';
 import { renderToString } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/vue/server-renderer/index.mjs';
@@ -29,7 +30,6 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import { stringify, uneval } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/devalue/index.js';
 import { captureRawStackTrace, parseRawStackTrace } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/errx/dist/index.js';
 import { isVNode, toValue, isRef } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/vue/index.mjs';
-import { promises } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname as dirname$1, resolve as resolve$1 } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/pathe/dist/index.mjs';
 import { createHead as createHead$1, propsToString, renderSSRHead } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/unhead/dist/server.mjs';
@@ -1025,7 +1025,7 @@ const _YFBRC2NZtBLqpprvAqinFD7_sQLocXGEXbByy_JODS0 = (function(nitro) {
 
 const rootDir = "/Users/coopergraddon/Downloads/djdjmeetingmap";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[],"style":[],"script":[],"noscript":[]};
+const appHead = {"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1.0"},{"name":"description","content":"DJ DJ LLC Property Management Dashboard"}],"link":[{"rel":"stylesheet","href":"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"}],"style":[],"script":[{"src":"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"},{"src":"https://cdn.tailwindcss.com"}],"noscript":[],"title":"DJ DJ LLC - Property Management"};
 
 const appRootTag = "div";
 
@@ -1523,10 +1523,12 @@ async function getIslandContext(event) {
   return ctx;
 }
 
+const _lazy_LITOQ3 = () => Promise.resolve().then(function () { return properties_get$1; });
 const _lazy_hhrUI6 = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
   { route: '', handler: _ykNb3M, lazy: false, middleware: true, method: undefined },
+  { route: '/api/properties', handler: _lazy_LITOQ3, lazy: true, middleware: false, method: "get" },
   { route: '/__nuxt_error', handler: _lazy_hhrUI6, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_island/**', handler: _SxA8c9, lazy: false, middleware: false, method: undefined },
   { route: '/**', handler: _lazy_hhrUI6, lazy: true, middleware: false, method: undefined }
@@ -1855,6 +1857,156 @@ const styles = {};
 const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: styles
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const properties_get = defineEventHandler(async (event) => {
+  var _a;
+  try {
+    const csvPath = join(process.cwd(), "sampledata.csv");
+    const csvContent = readFileSync(csvPath, "utf-8");
+    const lines = csvContent.split("\n").filter((line) => line.trim());
+    const headers = lines[0].split(",").map((h) => h.trim().replace(/"/g, ""));
+    const properties = [];
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i];
+      if (!line.trim()) continue;
+      const values = parseCSVLine(line);
+      if (values.length < headers.length) {
+        while (values.length < headers.length) {
+          values.push("");
+        }
+      }
+      const property = {};
+      headers.forEach((header, index) => {
+        let value = values[index] || "";
+        value = value.trim().replace(/"/g, "");
+        switch (header) {
+          case "Permit #":
+            property.permit = value;
+            break;
+          case "Project":
+            property.project = value;
+            break;
+          case "Style":
+            property.style = value;
+            break;
+          case "PM":
+            property.pm = value;
+            break;
+          case "Address":
+            property.address = value;
+            break;
+          case "APN":
+            property.apn = value;
+            break;
+          case "City":
+            property.city = value;
+            break;
+          case "Lot":
+            property.lot = value;
+            break;
+          case "SQ.FT.":
+            property.sqft = value;
+            break;
+          case "Client":
+            property.client = value;
+            break;
+          case "Phase":
+            property.phase = value;
+            break;
+          case "Draw":
+            property.draw = value;
+            break;
+          case "Notes":
+            property.notes = value;
+            break;
+          case "Permit Submitted":
+            property.permitSubmitted = value;
+            break;
+          case "Permit Issued":
+            property.permitIssued = value;
+            break;
+          case "Start Date":
+            property.startDate = value;
+            break;
+          case "Deadline":
+            property.deadline = value;
+            break;
+          case "Cert of OCC":
+            property.certOfOcc = value;
+            break;
+          case "Completed":
+            property.completed = value;
+            break;
+          case "Days Since Start":
+            property.daysSinceStart = value;
+            break;
+          case "Days Since Submital":
+            property.daysSinceSubmital = value;
+            break;
+          case "Windows ordered":
+            property.windowsOrdered = value;
+            break;
+          case "Days from Start to Finish":
+            property.daysFromStartToFinish = value;
+            break;
+          default:
+            property[header] = value;
+        }
+      });
+      if (property.address || property.apn) {
+        property.id = `property-${property.apn || ((_a = property.address) == null ? void 0 : _a.replace(/\s+/g, "-").toLowerCase())}`;
+        if (["Sheetrock", "Flatwork", "Roof", "Final"].includes(property.phase)) {
+          property.category = "Construction";
+        } else if (["Sold", "Listed", "Pending"].includes(property.phase)) {
+          property.category = "Completed";
+        } else if (["Design", "Hold", "Upcoming"].includes(property.phase)) {
+          property.category = "Upcoming";
+        } else {
+          property.category = "Other";
+        }
+        property.type = property.style || property.project || "Residential";
+        properties.push(property);
+      }
+    }
+    return {
+      success: true,
+      properties,
+      totalCount: properties.length,
+      lastUpdated: (/* @__PURE__ */ new Date()).toISOString()
+    };
+  } catch (error) {
+    console.error("Error reading CSV file:", error);
+    return {
+      success: false,
+      error: "Failed to read CSV file",
+      properties: [],
+      totalCount: 0
+    };
+  }
+});
+function parseCSVLine(line) {
+  const values = [];
+  let current = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === "," && !inQuotes) {
+      values.push(current);
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+  values.push(current);
+  return values;
+}
+
+const properties_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: properties_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function renderPayloadResponse(ssrContext) {

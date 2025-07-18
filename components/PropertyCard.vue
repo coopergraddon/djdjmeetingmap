@@ -10,13 +10,12 @@
           </div>
         </div>
         <div class="flex flex-col items-end space-y-2">
-          <span :class="getPhaseColorClass(property.phase)" class="px-3 py-2 text-sm font-semibold rounded-xl flex items-center space-x-2">
+          <span :class="['px-3 py-2 text-sm font-semibold rounded-xl flex items-center space-x-2', getPhaseColor(property.phase)]">
             <i :class="getPhaseIcon(property.phase)"></i>
             <span>{{ property.phase }}</span>
           </span>
         </div>
       </div>
-      
       <div class="space-y-3 mb-6">
         <div class="flex justify-between items-center">
           <span class="text-gray-600 flex items-center space-x-2">
@@ -47,19 +46,12 @@
           <span class="font-medium">{{ property.sqft }}</span>
         </div>
       </div>
-      
       <div class="flex gap-3">
-        <button 
-          @click="viewDetails"
-          class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2"
-        >
+        <NuxtLink :to="`/property/${property.apn}`" class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2">
           <i class="fas fa-info-circle"></i>
           <span>Details</span>
-        </button>
-        <button 
-          @click="viewOnMap"
-          class="flex-1 btn-primary text-white px-4 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2"
-        >
+        </NuxtLink>
+        <button @click="$emit('view-arcgis')" class="flex-1 btn-primary text-white px-4 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2">
           <i class="fas fa-map-marked-alt"></i>
           <span>Map</span>
         </button>
@@ -68,57 +60,17 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import type { Property } from '~/stores/properties'
+<script setup>
+import { useProperties } from '~/composables/useProperties';
 
-interface Props {
-  property: Property
-}
-
-const props = defineProps<Props>()
-const router = useRouter()
-const config = useRuntimeConfig()
-const propertiesStore = usePropertiesStore()
-
-const getPhaseColorClass = (phase: string) => {
-  const colors = {
-    'Sheetrock': 'phase-sheetrock',
-    'Flatwork': 'phase-flatwork',
-    'Roof': 'phase-roof',
-    'Final': 'phase-final',
-    'Design': 'phase-design',
-    'Sold': 'phase-sold',
-    'Listed': 'phase-listed',
-    'Pending': 'phase-pending',
-    'Delete': 'phase-delete',
-    'Unknown': 'phase-unknown'
+const props = defineProps({
+  property: {
+    type: Object,
+    required: true
   }
-  return colors[phase as keyof typeof colors] || 'phase-unknown'
-}
+});
 
-const getPhaseIcon = (phase: string) => {
-  const icons = {
-    'Sheetrock': 'fas fa-paint-roller',
-    'Flatwork': 'fas fa-hammer',
-    'Roof': 'fas fa-home',
-    'Final': 'fas fa-check-circle',
-    'Design': 'fas fa-drafting-compass',
-    'Sold': 'fas fa-dollar-sign',
-    'Listed': 'fas fa-tag',
-    'Pending': 'fas fa-clock',
-    'Delete': 'fas fa-trash'
-  }
-  return icons[phase as keyof typeof icons] || 'fas fa-info'
-}
+const emit = defineEmits(['view-arcgis']);
 
-const viewDetails = () => {
-  propertiesStore.setSelectedProperty(props.property)
-  propertiesStore.setCurrentView('detail')
-  router.push(`/properties/${props.property.id}`)
-}
-
-const viewOnMap = () => {
-  const url = `${config.public.arcgisExperienceUrl}#data_s=where:${config.public.dataSourceId}:geo_id='${props.property.apn}'&zoom_to_selection=true`
-  window.open(url, '_blank')
-}
-</script>
+const { getPhaseColor, getPhaseIcon } = useProperties();
+</script> 

@@ -1,5 +1,7 @@
 {
-  "name": "dj-dj-property-management",
+  "name": "djdj-property-management",
+  "version": "1.0.0",
+  "description": "DJ DJ LLC Property Management Dashboard",
   "private": true,
   "scripts": {
     "build": "nuxt build",
@@ -13,13 +15,6 @@
     "nuxt": "^3.8.0"
   },
   "dependencies": {
-    "@headlessui/vue": "^1.7.16",
-    "@heroicons/vue": "^2.0.18",
-    "@nuxtjs/tailwindcss": "^6.8.4",
-    "@pinia/nuxt": "^0.5.1",
-    "chart.js": "^4.4.0",
-    "papaparse": "^5.4.1",
-    "pinia": "^2.1.7",
-    "vue-chartjs": "^5.2.0"
+    "chart.js": "^3.9.1"
   }
-}
+} 

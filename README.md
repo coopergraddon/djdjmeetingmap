@@ -1,211 +1,138 @@
-# DJ DJ LLC Property Management System
+# DJ DJ LLC Property Management Dashboard
 
-A modern, responsive web application built with Nuxt 3 for managing and tracking property development projects. This system allows for dynamic CSV data import and provides comprehensive property portfolio management.
+A modern Nuxt.js application for managing and tracking property development projects across Bellingham and Blaine areas.
 
 ## Features
 
-### 🏠 Property Portfolio Management
-- **Dashboard Overview**: Interactive charts and statistics
-- **Property Listings**: Filterable and searchable property cards
-- **Detailed Property Views**: Comprehensive property information
-- **Phase Tracking**: Visual indicators for construction phases
-
-### 📊 Data Management
-- **CSV Import**: Drag-and-drop CSV file upload
-- **Dynamic Parsing**: Automatic field mapping and data validation
-- **Real-time Updates**: Instant dashboard updates after data import
-- **Flexible Schema**: Supports various CSV formats and field names
-
-### 🗺️ ArcGIS Integration
-- **Map Integration**: Direct links to ArcGIS Experience
-- **Property Mapping**: Individual property map views
-- **Geospatial Data**: APN-based property identification
-
-### 📱 Modern UI/UX
-- **Responsive Design**: Works on desktop, tablet, and mobile
-- **Glass Morphism**: Modern visual effects and animations
-- **Interactive Charts**: Chart.js integration for data visualization
-- **Tailwind CSS**: Utility-first styling approach
+- **Dynamic CSV Integration**: Automatically loads and updates from `sampledata.csv`
+- **Real-time Updates**: Auto-refreshes data every 5 minutes
+- **Dashboard Overview**: Comprehensive statistics and phase distribution charts
+- **Property Management**: View all properties with filtering and search capabilities
+- **ArcGIS Integration**: Direct links to ArcGIS maps for each property
+- **Responsive Design**: Modern, mobile-friendly interface
+- **Live Data**: Property data with construction phases and timelines
 
 ## Technology Stack
 
-- **Frontend Framework**: Nuxt 3 (Vue.js)
-- **State Management**: Pinia
-- **Styling**: Tailwind CSS with custom design system
-- **Charts**: Chart.js with Vue-ChartJS
-- **CSV Parsing**: PapaParse
-- **TypeScript**: Full type safety
+- **Nuxt 3**: Vue.js framework for server-side rendering
+- **TypeScript**: Type-safe development
+- **Tailwind CSS**: Utility-first CSS framework
+- **Chart.js**: Interactive charts and visualizations
+- **Font Awesome**: Icon library
 
-## Quick Start
+## Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js (version 16 or higher)
 - npm or yarn
 
 ### Installation
 
-1. **Clone and install dependencies**:
+1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd dj-dj-property-management
+cd djdjmeetingmap
+```
+
+2. Install dependencies:
+```bash
 npm install
 ```
 
-2. **Start development server**:
+3. Ensure your CSV data file is in place:
+```bash
+# The application expects sampledata.csv in the project root
+# This file should contain your property data with the correct headers
+```
+
+4. Start the development server:
 ```bash
 npm run dev
 ```
 
-3. **Build for production**:
+5. Open your browser and navigate to `http://localhost:3000`
+
+### Updating Data
+
+The website automatically loads data from `sampledata.csv`. To update the website:
+
+1. **Edit the CSV file**: Modify `sampledata.csv` with your latest property data
+2. **Save the file**: The changes will be detected automatically
+3. **Refresh the website**: Or wait for the 5-minute auto-refresh
+
+**CSV Format Requirements:**
+- First row must contain headers
+- Key columns: `Address`, `APN`, `Phase`, `City`, `Client`, `Notes`
+- Empty cells are allowed
+- The application will automatically categorize properties based on the `Phase` column
+
+### Build for Production
+
 ```bash
 npm run build
+npm run preview
 ```
-
-## CSV Data Format
-
-The system can automatically parse CSV files with the following supported field names (case-insensitive):
-
-### Required Fields
-- `address` / `Address` - Property address
-- `apn` / `APN` - Assessor's Parcel Number
-- `phase` / `Phase` - Current project phase
-- `city` / `City` - Property city
-
-### Optional Fields
-- `type` / `Type` - Property type
-- `permit` / `Permit` - Permit number
-- `sqft` / `SQFT` / `Square Feet` - Square footage
-- `client` / `Client` - Client name
-- `startDate` / `Start Date` - Project start date
-- `deadline` / `Deadline` - Target completion date
-- `completed` / `Completed` - Completion date
-- `notes` / `Notes` - Project notes
-- `permitSubmitted` / `Permit Submitted` - Permit submission date
-- `permitIssued` / `Permit Issued` - Permit issue date
-- `daysToComplete` / `Days to Complete` - Project duration
-- `estimatedDaysToComplete` / `Estimated Days` - Estimated duration
-- `financialInstitution` / `Financial Institution` - Lender information
-
-### Supported Phases
-- **Construction**: Sheetrock, Flatwork, Roof, Final
-- **Completed**: Sold, Listed, Pending
-- **Upcoming**: Design, Delete, Hold, Unknown
 
 ## Project Structure
 
 ```
 ├── assets/
 │   └── css/
-│       └── main.css          # Global styles and CSS variables
+│       └── main.css          # Global styles and custom CSS
 ├── components/
-│   ├── ActivityItem.vue      # Recent activity items
-│   ├── CSVUpload.vue         # CSV file upload component
-│   ├── HeaderComponent.vue   # Navigation header
-│   ├── PhaseChart.vue        # Phase distribution chart
-│   ├── PropertyCard.vue      # Property card component
-│   ├── PropertyDetailRow.vue # Property detail row
-│   ├── RecentActivity.vue    # Recent activity section
-│   └── StatsCard.vue         # Statistics cards
-├── layouts/
-│   └── default.vue           # Main layout template
+│   ├── PropertyCard.vue      # Individual property card component
+│   └── PropertyDetail.vue    # Detailed property view component
+├── composables/
+│   └── useProperties.ts      # Property data management and state
 ├── pages/
-│   ├── index.vue            # Dashboard home page
-│   └── properties/
-│       ├── index.vue        # Properties list page
-│       └── [id].vue         # Property detail page
-├── stores/
-│   └── properties.ts        # Pinia store for property management
-├── nuxt.config.ts           # Nuxt configuration
-├── tailwind.config.js       # Tailwind CSS configuration
-└── package.json            # Dependencies and scripts
+│   └── index.vue             # Main dashboard page
+├── app.vue                   # Root application component
+├── nuxt.config.ts            # Nuxt configuration
+└── package.json              # Dependencies and scripts
 ```
 
-## Configuration
+## Features Overview
 
-### Environment Variables
-Set these in your `.env` file or runtime config:
+### Dashboard
+- Property statistics and counts
+- Phase distribution chart
+- Recent activity feed
+- Quick action buttons
 
-```bash
-# ArcGIS Integration
-NUXT_PUBLIC_ARCGIS_EXPERIENCE_URL=https://experience.arcgis.com/experience/c69f053c68e84a0ab98bc80b00836949/
-NUXT_PUBLIC_DATA_SOURCE_ID=dataSource_5-c618cc10482c44689186cffcf8f4521a
-```
-
-### Customizing the Design System
-
-The application uses CSS custom properties for easy theming:
-
-```css
-:root {
-  --primary-green: #1e4d4b;
-  --secondary-green: #2a6a67;
-  --light-green: #3a7b78;
-  --accent-green: #4a8d8a;
-  --bg-green: #f0f9f8;
-}
-```
-
-## Usage
-
-### 1. Upload CSV Data
-- Visit the dashboard
-- Use the CSV upload component to drag and drop or select CSV files
-- The system will automatically parse and categorize properties
-
-### 2. Navigate Properties
-- Use the navigation menu to filter by category
-- Search properties by address, APN, or city
+### Property List
+- Search by address, APN, or city
 - Filter by construction phase
+- Grid view of all properties
+- Quick access to details and maps
 
-### 3. View Property Details
-- Click "Details" on any property card
-- View comprehensive property information
-- Access ArcGIS maps directly from property views
+### Property Details
+- Comprehensive property information
+- Project timeline and milestones
+- Financial and timeline data
+- Direct links to ArcGIS maps
 
-### 4. Monitor Progress
-- Dashboard provides real-time statistics
-- Phase distribution chart shows project status
-- Recent activity feed tracks changes
+## Data Structure
 
-## Development
+Properties are categorized by:
+- **Construction**: Active development projects (Sheetrock, Flatwork, Roof, Final phases)
+- **Completed**: Finished projects (Sold, Listed, Pending phases)
+- **Upcoming**: Future developments (Design phase)
 
-### Adding New Property Fields
-1. Update the `Property` interface in `stores/properties.ts`
-2. Add field mapping in the CSV parser
-3. Update UI components to display new fields
+## ArcGIS Integration
 
-### Customizing Phase Categories
-1. Modify phase arrays in the store getters
-2. Update phase color mappings in components
-3. Adjust chart colors in `PhaseChart.vue`
+The application integrates with ArcGIS Experience Builder for:
+- Interactive property mapping
+- Geographic visualization
+- Property location tracking
 
-### Extending CSV Support
-The CSV parser is flexible and can be extended to support additional field formats by modifying the `parseCSVFile` method in the properties store.
+## Contributing
 
-## Deployment
-
-### Static Generation
-```bash
-npm run generate
-```
-
-### Server-Side Rendering
-```bash
-npm run build
-npm run preview
-```
-
-### Hosting
-The application can be deployed to:
-- Vercel
-- Netlify  
-- AWS Amplify
-- Traditional web hosting (static)
-
-## Support
-
-For technical support or questions about the property management system, please refer to the project documentation or contact the development team.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
 ## License
 
-Copyright © 2025 DJ DJ LLC. All rights reserved.
+This project is proprietary to DJ DJ LLC. 
