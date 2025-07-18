@@ -21,20 +21,23 @@
             <span class="text-sm text-green-100 font-medium">ArcGIS Integrated System</span>
           </div>
         </div>
-        <nav class="flex space-x-8">
-          <NuxtLink to="/" class="nav-link text-white hover:text-green-100 font-medium py-2">
-            <i class="fas fa-chart-pie mr-2"></i>Dashboard
-          </NuxtLink>
-          <NuxtLink to="/?view=list" class="nav-link text-white hover:text-green-100 font-medium py-2">
-            <i class="fas fa-list mr-2"></i>All Properties
-          </NuxtLink>
-          <button @click="showConstruction" class="nav-link text-white hover:text-green-100 font-medium py-2">
-            <i class="fas fa-hard-hat mr-2"></i>In Construction
-          </button>
-          <button @click="showCompleted" class="nav-link text-white hover:text-green-100 font-medium py-2">
-            <i class="fas fa-check-circle mr-2"></i>Completed
-          </button>
-        </nav>
+                  <nav class="flex space-x-8">
+            <NuxtLink to="/" class="nav-link text-white hover:text-green-100 font-medium py-2">
+              <i class="fas fa-chart-pie mr-2"></i>Dashboard
+            </NuxtLink>
+            <NuxtLink to="/?view=list" class="nav-link text-white hover:text-green-100 font-medium py-2">
+              <i class="fas fa-list mr-2"></i>All Properties
+            </NuxtLink>
+            <button @click="showConstruction" class="nav-link text-white hover:text-green-100 font-medium py-2">
+              <i class="fas fa-hard-hat mr-2"></i>In Construction
+            </button>
+            <button @click="showCompleted" class="nav-link text-white hover:text-green-100 font-medium py-2">
+              <i class="fas fa-check-circle mr-2"></i>Completed
+            </button>
+            <button @click="showCsvUpload" class="nav-link text-white hover:text-green-100 font-medium py-2">
+              <i class="fas fa-upload mr-2"></i>Upload CSV
+            </button>
+          </nav>
       </div>
     </div>
   </header>
@@ -51,5 +54,10 @@ const showConstruction = () => {
 
 const showCompleted = () => {
   showPropertiesByCategory('Completed');
+};
+
+const showCsvUpload = () => {
+  // Navigate to the main page and show CSV uploader
+  navigateTo('/?upload=csv');
 };
 </script> 

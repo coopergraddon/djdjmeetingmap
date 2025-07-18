@@ -1,0 +1,4 @@
+Address,APN,Phase,City,Client,Notes,Permit Submitted,Permit Issued,Start Date,Deadline,SQ.FT.,Style,Project
+123 Main St,1234567890123456,Design,Bellingham,John Doe,New residential development,2024-01-15,2024-02-01,2024-03-01,2024-12-31,2500,Single Family,Residential
+456 Oak Ave,2345678901234567,Construction,Blaine,Jane Smith,Multi-family project,2024-02-01,2024-02-15,2024-03-15,2024-11-30,5000,Multi-Family,Commercial
+789 Pine Rd,3456789012345678,Completed,Ferndale,Bob Johnson,Completed project,2023-06-01,2023-06-15,2023-07-01,2023-12-31,1800,Single Family,Residential 

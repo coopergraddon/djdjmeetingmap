@@ -5,6 +5,7 @@ A modern Nuxt.js application for managing and tracking property development proj
 ## Features
 
 - **Dynamic CSV Integration**: Automatically loads and updates from `sampledata.csv`
+- **CSV Upload Backup**: Upload your own CSV file if the default data fails to load
 - **Real-time Updates**: Auto-refreshes data every 5 minutes
 - **Dashboard Overview**: Comprehensive statistics and phase distribution charts
 - **Property Management**: View all properties with filtering and search capabilities
@@ -61,9 +62,19 @@ The website automatically loads data from `sampledata.csv`. To update the websit
 2. **Save the file**: The changes will be detected automatically
 3. **Refresh the website**: Or wait for the 5-minute auto-refresh
 
+### CSV Upload (Backup Option)
+
+If the default data fails to load (e.g., on Vercel deployment), you can upload your own CSV file:
+
+1. **Click "Upload CSV"** in the navigation or dashboard
+2. **Select your CSV file** or drag and drop it
+3. **Download the template** to see the expected format
+4. **Upload and process** your data
+
 **CSV Format Requirements:**
 - First row must contain headers
-- Key columns: `Address`, `APN`, `Phase`, `City`, `Client`, `Notes`
+- Required columns: `Address`, `APN`, `Phase`
+- Optional columns: `City`, `Client`, `Notes`, `Permit Submitted`, etc.
 - Empty cells are allowed
 - The application will automatically categorize properties based on the `Phase` column
 

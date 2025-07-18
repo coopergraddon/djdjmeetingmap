@@ -6,6 +6,9 @@ declare module "nitropack/types" {
     '/api/properties': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/properties.get').default>>>>
     }
+    '/api/upload-csv': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/upload-csv.post').default>>>>
+    }
     '/__nuxt_error': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/nuxt/dist/core/runtime/nitro/handlers/renderer').default>>>>
     }

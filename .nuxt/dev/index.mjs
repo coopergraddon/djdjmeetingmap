@@ -1,11 +1,11 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, createError, getQuery as getQuery$1, readBody, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, getResponseStatusText } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/h3/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, createError, getQuery as getQuery$1, readBody, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, readFormData, getResponseStatusText } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/h3/dist/index.mjs';
 import { Server } from 'node:http';
 import { resolve, dirname, join } from 'node:path';
 import nodeCrypto from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
 import { escapeHtml } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/@vue/shared/dist/shared.cjs.js';
-import { promises, readFileSync } from 'node:fs';
+import { promises, readFileSync, writeFileSync } from 'node:fs';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/ufo/dist/index.mjs';
 import { renderToString } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/vue/server-renderer/index.mjs';
@@ -1116,7 +1116,22 @@ const plugins = [
 __uECFbb2YNEBQHWUf8iZbQklmqHW4r2hsfgkdsgag
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"13a56-qYBig77UcOayoOoNJq7XyV7N1ps\"",
+    "mtime": "2025-07-18T05:36:54.885Z",
+    "size": 80470,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"49bcc-e3pmQI8khFtdt97P0sA+3AGbsrQ\"",
+    "mtime": "2025-07-18T05:36:54.885Z",
+    "size": 302028,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -1524,11 +1539,13 @@ async function getIslandContext(event) {
 }
 
 const _lazy_LITOQ3 = () => Promise.resolve().then(function () { return properties_get$1; });
+const _lazy_nvWSAx = () => Promise.resolve().then(function () { return uploadCsv_post$1; });
 const _lazy_hhrUI6 = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
   { route: '', handler: _ykNb3M, lazy: false, middleware: true, method: undefined },
   { route: '/api/properties', handler: _lazy_LITOQ3, lazy: true, middleware: false, method: "get" },
+  { route: '/api/upload-csv', handler: _lazy_nvWSAx, lazy: true, middleware: false, method: "post" },
   { route: '/__nuxt_error', handler: _lazy_hhrUI6, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_island/**', handler: _SxA8c9, lazy: false, middleware: false, method: undefined },
   { route: '/**', handler: _lazy_hhrUI6, lazy: true, middleware: false, method: undefined }
@@ -1870,7 +1887,7 @@ const properties_get = defineEventHandler(async (event) => {
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i];
       if (!line.trim()) continue;
-      const values = parseCSVLine(line);
+      const values = parseCSVLine$1(line);
       if (values.length < headers.length) {
         while (values.length < headers.length) {
           values.push("");
@@ -1985,7 +2002,7 @@ const properties_get = defineEventHandler(async (event) => {
     };
   }
 });
-function parseCSVLine(line) {
+function parseCSVLine$1(line) {
   const values = [];
   let current = "";
   let inQuotes = false;
@@ -2007,6 +2024,202 @@ function parseCSVLine(line) {
 const properties_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: properties_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const uploadCsv_post = defineEventHandler(async (event) => {
+  var _a;
+  try {
+    const formData = await readFormData(event);
+    const csvFile = formData.get("csv");
+    if (!csvFile) {
+      return {
+        success: false,
+        error: "No CSV file provided",
+        properties: [],
+        totalCount: 0
+      };
+    }
+    const csvContent = await csvFile.text();
+    const lines = csvContent.split("\n").filter((line) => line.trim());
+    if (lines.length < 2) {
+      return {
+        success: false,
+        error: "CSV file must have at least a header row and one data row",
+        properties: [],
+        totalCount: 0
+      };
+    }
+    const headers = lines[0].split(",").map((h) => h.trim().replace(/"/g, ""));
+    const requiredHeaders = ["Address", "APN", "Phase"];
+    const missingHeaders = requiredHeaders.filter(
+      (header) => !headers.some((h) => h.toLowerCase() === header.toLowerCase())
+    );
+    if (missingHeaders.length > 0) {
+      return {
+        success: false,
+        error: `Missing required headers: ${missingHeaders.join(", ")}`,
+        properties: [],
+        totalCount: 0
+      };
+    }
+    const properties = [];
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i];
+      if (!line.trim()) continue;
+      const values = parseCSVLine(line);
+      if (values.length < headers.length) {
+        while (values.length < headers.length) {
+          values.push("");
+        }
+      }
+      const property = {};
+      headers.forEach((header, index) => {
+        let value = values[index] || "";
+        value = value.trim().replace(/"/g, "");
+        switch (header.toLowerCase()) {
+          case "permit #":
+          case "permit":
+            property.permit = value;
+            break;
+          case "project":
+            property.project = value;
+            break;
+          case "style":
+            property.style = value;
+            break;
+          case "pm":
+            property.pm = value;
+            break;
+          case "address":
+            property.address = value;
+            break;
+          case "apn":
+            property.apn = value;
+            break;
+          case "city":
+            property.city = value;
+            break;
+          case "lot":
+            property.lot = value;
+            break;
+          case "sq.ft.":
+          case "sqft":
+          case "square feet":
+            property.sqft = value;
+            break;
+          case "client":
+            property.client = value;
+            break;
+          case "phase":
+            property.phase = value;
+            break;
+          case "draw":
+            property.draw = value;
+            break;
+          case "notes":
+            property.notes = value;
+            break;
+          case "permit submitted":
+            property.permitSubmitted = value;
+            break;
+          case "permit issued":
+            property.permitIssued = value;
+            break;
+          case "start date":
+            property.startDate = value;
+            break;
+          case "deadline":
+            property.deadline = value;
+            break;
+          case "cert of occ":
+            property.certOfOcc = value;
+            break;
+          case "completed":
+            property.completed = value;
+            break;
+          case "days since start":
+            property.daysSinceStart = value;
+            break;
+          case "days since submital":
+            property.daysSinceSubmital = value;
+            break;
+          case "windows ordered":
+            property.windowsOrdered = value;
+            break;
+          case "days from start to finish":
+            property.daysFromStartToFinish = value;
+            break;
+          default:
+            property[header] = value;
+        }
+      });
+      if (property.address || property.apn) {
+        property.id = `property-${property.apn || ((_a = property.address) == null ? void 0 : _a.replace(/\s+/g, "-").toLowerCase())}`;
+        if (["Sheetrock", "Flatwork", "Roof", "Final"].includes(property.phase)) {
+          property.category = "Construction";
+        } else if (["Sold", "Listed", "Pending"].includes(property.phase)) {
+          property.category = "Completed";
+        } else if (["Design", "Hold", "Upcoming"].includes(property.phase)) {
+          property.category = "Upcoming";
+        } else {
+          property.category = "Other";
+        }
+        property.type = property.style || property.project || "Residential";
+        properties.push(property);
+      }
+    }
+    if (properties.length === 0) {
+      return {
+        success: false,
+        error: "No valid properties found in CSV file",
+        properties: [],
+        totalCount: 0
+      };
+    }
+    try {
+      const backupPath = join(process.cwd(), "uploaded-data.csv");
+      writeFileSync(backupPath, csvContent);
+    } catch (writeError) {
+      console.warn("Failed to save uploaded CSV backup:", writeError);
+    }
+    return {
+      success: true,
+      properties,
+      totalCount: properties.length,
+      lastUpdated: (/* @__PURE__ */ new Date()).toISOString()
+    };
+  } catch (error) {
+    console.error("Error processing uploaded CSV:", error);
+    return {
+      success: false,
+      error: "Failed to process CSV file",
+      properties: [],
+      totalCount: 0
+    };
+  }
+});
+function parseCSVLine(line) {
+  const values = [];
+  let current = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === "," && !inQuotes) {
+      values.push(current);
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+  values.push(current);
+  return values;
+}
+
+const uploadCsv_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: uploadCsv_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function renderPayloadResponse(ssrContext) {

@@ -13,6 +13,7 @@ type HydrationStrategies = {
 type LazyComponent<T> = (T & DefineComponent<HydrationStrategies, {}, {}, {}, {}, {}, {}, { hydrated: () => void }>)
 interface _GlobalComponents {
       'AppHeader': typeof import("../components/AppHeader.vue")['default']
+    'CsvUploader': typeof import("../components/CsvUploader.vue")['default']
     'PropertyCard': typeof import("../components/PropertyCard.vue")['default']
     'PropertyDetail': typeof import("../components/PropertyDetail.vue")['default']
     'NuxtWelcome': typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
@@ -40,6 +41,7 @@ interface _GlobalComponents {
     'NuxtIsland': typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
     'NuxtRouteAnnouncer': typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']
       'LazyAppHeader': LazyComponent<typeof import("../components/AppHeader.vue")['default']>
+    'LazyCsvUploader': LazyComponent<typeof import("../components/CsvUploader.vue")['default']>
     'LazyPropertyCard': LazyComponent<typeof import("../components/PropertyCard.vue")['default']>
     'LazyPropertyDetail': LazyComponent<typeof import("../components/PropertyDetail.vue")['default']>
     'LazyNuxtWelcome': LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']>
@@ -73,6 +75,7 @@ declare module 'vue' {
 }
 
 export const AppHeader: typeof import("../components/AppHeader.vue")['default']
+export const CsvUploader: typeof import("../components/CsvUploader.vue")['default']
 export const PropertyCard: typeof import("../components/PropertyCard.vue")['default']
 export const PropertyDetail: typeof import("../components/PropertyDetail.vue")['default']
 export const NuxtWelcome: typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
@@ -100,6 +103,7 @@ export const Body: typeof import("../node_modules/nuxt/dist/head/runtime/compone
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
 export const NuxtRouteAnnouncer: typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']
 export const LazyAppHeader: LazyComponent<typeof import("../components/AppHeader.vue")['default']>
+export const LazyCsvUploader: LazyComponent<typeof import("../components/CsvUploader.vue")['default']>
 export const LazyPropertyCard: LazyComponent<typeof import("../components/PropertyCard.vue")['default']>
 export const LazyPropertyDetail: LazyComponent<typeof import("../components/PropertyDetail.vue")['default']>
 export const LazyNuxtWelcome: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']>

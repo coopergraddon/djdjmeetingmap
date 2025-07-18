@@ -15,14 +15,26 @@
         </div>
 
         <!-- Error State -->
-        <div v-else-if="error" class="text-center py-12">
-          <div class="bg-red-50 border border-red-200 rounded-xl p-8 max-w-2xl mx-auto">
-            <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-4"></i>
-            <h3 class="text-xl font-semibold text-red-800 mb-2">Error Loading Data</h3>
-            <p class="text-red-600 mb-4">{{ error }}</p>
-            <button @click="fetchProperties" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors">
-              <i class="fas fa-redo mr-2"></i>Retry
-            </button>
+        <div v-else-if="error" class="space-y-8">
+          <div class="text-center py-12">
+            <div class="bg-red-50 border border-red-200 rounded-xl p-8 max-w-2xl mx-auto">
+              <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-4"></i>
+              <h3 class="text-xl font-semibold text-red-800 mb-2">Error Loading Data</h3>
+              <p class="text-red-600 mb-4">{{ error }}</p>
+              <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button @click="fetchProperties" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors">
+                  <i class="fas fa-redo mr-2"></i>Retry
+                </button>
+                <button @click="showCsvUploader = true" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors">
+                  <i class="fas fa-upload mr-2"></i>Upload CSV
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- CSV Uploader -->
+          <div v-if="showCsvUploader" class="max-w-2xl mx-auto">
+            <CsvUploader @data-loaded="handleCsvDataLoaded" />
           </div>
         </div>
 
@@ -95,7 +107,7 @@
               <i class="fas fa-rocket text-indigo-600"></i>
             </div>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <button @click="openArcGISMap()" class="group btn-primary text-white px-8 py-6 rounded-xl font-semibold flex items-center justify-center space-x-3 shadow-lg">
               <i class="fas fa-map-marked-alt text-xl group-hover:scale-110 transition-transform"></i>
               <span>Open ArcGIS Map</span>
@@ -108,7 +120,22 @@
               <i class="fas fa-th-large text-xl group-hover:scale-110 transition-transform"></i>
               <span>Browse All</span>
             </button>
+            <button @click="showCsvUploader = true" class="group bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-6 rounded-xl font-semibold flex items-center justify-center space-x-3 shadow-lg transition-all hover:scale-105">
+              <i class="fas fa-upload text-xl group-hover:scale-110 transition-transform"></i>
+              <span>Upload CSV</span>
+            </button>
           </div>
+        </div>
+        
+        <!-- CSV Uploader Section -->
+        <div v-if="showCsvUploader" class="glass-effect rounded-2xl p-8 shadow-xl">
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-bold text-gray-900">Upload Your Own Data</h2>
+            <button @click="showCsvUploader = false" class="text-gray-500 hover:text-gray-700">
+              <i class="fas fa-times text-xl"></i>
+            </button>
+          </div>
+          <CsvUploader @data-loaded="handleCsvDataLoaded" />
         </div>
         </div>
       </div>
@@ -169,6 +196,7 @@
 import { ref, onMounted, nextTick } from 'vue';
 import { useProperties } from '~/composables/useProperties';
 import PropertyCard from '~/components/PropertyCard.vue';
+import CsvUploader from '~/components/CsvUploader.vue';
 
 const {
   allProperties,
@@ -189,12 +217,26 @@ const {
 } = useProperties();
 
 const phaseChartCanvas = ref(null);
+const showCsvUploader = ref(false);
 let phaseChart = null;
 
 
 
 const openArcGISMap = () => {
   window.open('https://experience.arcgis.com/experience/c69f053c68e84a0ab98bc80b00836949/', '_blank');
+};
+
+const handleCsvDataLoaded = (properties) => {
+  // Update the composable with the uploaded data
+  allProperties.value = properties;
+  filteredProperties.value = properties;
+  error.value = null;
+  showCsvUploader.value = false;
+  
+  // Reinitialize the chart with new data
+  nextTick(() => {
+    initializePhaseChart();
+  });
 };
 
 const initializePhaseChart = () => {
@@ -303,6 +345,12 @@ const initializePhaseChart = () => {
 
 onMounted(async () => {
   await nextTick();
+  
+  // Check if user wants to upload CSV
+  const route = useRoute();
+  if (route.query.upload === 'csv') {
+    showCsvUploader.value = true;
+  }
   
   // Fetch initial data
   await fetchProperties();
