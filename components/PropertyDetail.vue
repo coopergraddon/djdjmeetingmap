@@ -10,23 +10,23 @@
           <h3 class="text-2xl font-bold text-gray-900">Property Information</h3>
         </div>
         <div class="space-y-4">
-          <div class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+          <div v-if="property.address" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
             <span class="text-gray-600 font-medium">Address:</span>
             <span class="font-bold text-gray-900">{{ property.address }}</span>
           </div>
-          <div class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+          <div v-if="property.apn" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
             <span class="text-gray-600 font-medium">APN/Geo ID:</span>
             <span class="font-mono font-bold text-gray-900">{{ property.apn }}</span>
           </div>
-          <div class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+          <div v-if="property.phase" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
             <span class="text-gray-600 font-medium">Phase:</span>
             <span :class="['px-3 py-1 text-sm font-semibold rounded-lg', getPhaseColor(property.phase)]">{{ property.phase }}</span>
           </div>
-          <div class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+          <div v-if="property.type" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
             <span class="text-gray-600 font-medium">Property Type:</span>
             <span class="font-bold text-gray-900">{{ property.type }}</span>
           </div>
-          <div class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+          <div v-if="property.city" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
             <span class="text-gray-600 font-medium">City:</span>
             <span class="font-bold text-gray-900">{{ property.city }}</span>
           </div>
