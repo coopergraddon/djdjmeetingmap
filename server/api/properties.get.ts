@@ -1,11 +1,10 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { $fetch } from 'ofetch';
 
 export default defineEventHandler(async (event) => {
   try {
-    // Read the CSV file from the project root
-    const csvPath = join(process.cwd(), 'sampledata.csv');
-    const csvContent = readFileSync(csvPath, 'utf-8');
+    // Fetch the CSV file from GitHub
+    const csvUrl = 'https://raw.githubusercontent.com/coopergraddon/djdjmeetingmap/refs/heads/main/sampledata.csv';
+    const csvContent = await $fetch(csvUrl, { responseType: 'text' });
     
     // Parse CSV content
     const lines = csvContent.split('\n').filter(line => line.trim());

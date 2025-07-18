@@ -5,13 +5,13 @@ import { resolve, dirname, join } from 'node:path';
 import nodeCrypto from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
 import { escapeHtml } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/@vue/shared/dist/shared.cjs.js';
-import { promises, readFileSync, writeFileSync } from 'node:fs';
+import { createFetch, Headers as Headers$1, $fetch } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/ofetch/dist/node.mjs';
+import { promises, writeFileSync } from 'node:fs';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/ufo/dist/index.mjs';
 import { renderToString } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/vue/server-renderer/index.mjs';
 import destr, { destr as destr$1 } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/destr/dist/index.mjs';
 import { createHooks } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/hookable/dist/index.mjs';
-import { createFetch, Headers as Headers$1 } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/ofetch/dist/node.mjs';
 import { fetchNodeRequestHandler, callNodeRequestHandler } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/node-mock-http/dist/index.mjs';
 import { createStorage, prefixStorage } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/unstorage/dist/index.mjs';
 import unstorage_47drivers_47fs from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/unstorage/drivers/fs.mjs';
@@ -1116,22 +1116,7 @@ const plugins = [
 __uECFbb2YNEBQHWUf8iZbQklmqHW4r2hsfgkdsgag
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"13a56-qYBig77UcOayoOoNJq7XyV7N1ps\"",
-    "mtime": "2025-07-18T05:36:54.885Z",
-    "size": 80470,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"49bcc-e3pmQI8khFtdt97P0sA+3AGbsrQ\"",
-    "mtime": "2025-07-18T05:36:54.885Z",
-    "size": 302028,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -1879,8 +1864,8 @@ const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 const properties_get = defineEventHandler(async (event) => {
   var _a;
   try {
-    const csvPath = join(process.cwd(), "sampledata.csv");
-    const csvContent = readFileSync(csvPath, "utf-8");
+    const csvUrl = "https://raw.githubusercontent.com/coopergraddon/djdjmeetingmap/refs/heads/main/sampledata.csv";
+    const csvContent = await $fetch(csvUrl, { responseType: "text" });
     const lines = csvContent.split("\n").filter((line) => line.trim());
     const headers = lines[0].split(",").map((h) => h.trim().replace(/"/g, ""));
     const properties = [];
