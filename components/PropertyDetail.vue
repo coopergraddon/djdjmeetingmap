@@ -105,6 +105,22 @@
       </div>
     </div>
     
+    <!-- Current Project Duration -->
+    <div class="glass-effect rounded-2xl p-8 shadow-lg">
+      <div class="flex items-center space-x-3 mb-6">
+        <div class="p-3 rounded-xl bg-gradient-to-br from-orange-100 to-orange-200">
+          <i class="fas fa-hourglass-half text-orange-600"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900">Current Project Duration</h3>
+      </div>
+      <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-between">
+        <span class="text-gray-600 font-medium">Days since start:</span>
+        <span class="font-bold text-gray-900 text-lg">
+          {{ projectDurationDays !== null ? projectDurationDays + ' days' : '—' }}
+        </span>
+      </div>
+    </div>
+    
     <!-- Project Notes & Status -->
     <div class="glass-effect rounded-2xl p-8 shadow-lg">
       <div class="flex items-center space-x-3 mb-6">
@@ -146,6 +162,7 @@
 
 <script setup>
 import { useProperties } from '~/composables/useProperties';
+import { computed } from 'vue';
 
 const props = defineProps({
   property: {
@@ -160,4 +177,13 @@ const handleViewDashboard = () => {
   // Navigate to dashboard
   navigateTo('/');
 };
+
+const projectDurationDays = computed(() => {
+  if (!props.property.startDate) return null;
+  const start = new Date(props.property.startDate);
+  if (isNaN(start)) return null;
+  const today = new Date();
+  const diff = today - start;
+  return Math.floor(diff / (1000 * 60 * 60 * 24));
+});
 </script> 

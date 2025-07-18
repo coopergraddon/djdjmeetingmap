@@ -51,6 +51,7 @@ export default defineEventHandler(async (event) => {
             case 'days since submital': property.daysSinceSubmital = value; break;
             case 'windows ordered': property.windowsOrdered = value; break;
             case 'days from start to finish': property.daysFromStartToFinish = value; break;
+            case 'financial institution': property.financialInstitution = value; break;
             default: property[header] = value;
           }
         });
@@ -70,6 +71,9 @@ export default defineEventHandler(async (event) => {
         }
       }
     }
+
+    // Filter out properties in the 'Delete' phase
+    properties = properties.filter(p => p.phase?.toLowerCase() !== 'delete');
 
     return {
       success: true,

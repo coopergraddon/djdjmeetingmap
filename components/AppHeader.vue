@@ -34,9 +34,6 @@
             <button @click="showCompleted" class="nav-link text-white hover:text-green-100 font-medium py-2">
               <i class="fas fa-check-circle mr-2"></i>Completed
             </button>
-            <button @click="showCsvUpload" class="nav-link text-white hover:text-green-100 font-medium py-2">
-              <i class="fas fa-upload mr-2"></i>Upload CSV
-            </button>
           </nav>
       </div>
     </div>
@@ -54,10 +51,5 @@ const showConstruction = () => {
 
 const showCompleted = () => {
   showPropertiesByCategory('Completed');
-};
-
-const showCsvUpload = () => {
-  // Navigate to the main page and show CSV uploader
-  navigateTo('/?upload=csv');
 };
 </script> 

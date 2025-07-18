@@ -1956,6 +1956,9 @@ const properties_get = defineEventHandler(async (event) => {
             case "days from start to finish":
               property.daysFromStartToFinish = value;
               break;
+            case "financial institution":
+              property.financialInstitution = value;
+              break;
             default:
               property[header] = value;
           }
@@ -1976,6 +1979,10 @@ const properties_get = defineEventHandler(async (event) => {
         }
       }
     }
+    properties = properties.filter((p) => {
+      var _a2;
+      return ((_a2 = p.phase) == null ? void 0 : _a2.toLowerCase()) !== "delete";
+    });
     return {
       success: true,
       properties,
