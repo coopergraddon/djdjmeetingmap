@@ -1,0 +1,25 @@
+{
+  "name": "dj-dj-property-management",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "nuxt": "^3.8.0"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.7.16",
+    "@heroicons/vue": "^2.0.18",
+    "@nuxtjs/tailwindcss": "^6.8.4",
+    "@pinia/nuxt": "^0.5.1",
+    "chart.js": "^4.4.0",
+    "papaparse": "^5.4.1",
+    "pinia": "^2.1.7",
+    "vue-chartjs": "^5.2.0"
+  }
+}
