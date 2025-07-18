@@ -1,6 +1,10 @@
 <template>
   <div class="bg-gray-50">
-    <AppHeader />
+    <AppHeader 
+      @show-all="showAllPropertiesAndScroll"
+      @show-construction="showConstructionAndScroll"
+      @show-completed="showCompletedAndScroll"
+    />
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -306,6 +310,25 @@ const initializePhaseChart = () => {
     }
   });
 };
+
+const showAllPropertiesAndScroll = () => {
+  showAllProperties();
+  scrollToList();
+};
+const showConstructionAndScroll = () => {
+  showPropertiesByCategory('Construction');
+  scrollToList();
+};
+const showCompletedAndScroll = () => {
+  showPropertiesByCategory('Completed');
+  scrollToList();
+};
+function scrollToList() {
+  nextTick(() => {
+    const el = document.querySelector('.animate-fade-in');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  });
+}
 
 onMounted(async () => {
   await nextTick();

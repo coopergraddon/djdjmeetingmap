@@ -25,13 +25,13 @@
           <NuxtLink to="/" class="nav-link text-white hover:text-green-100 font-medium py-2">
             <i class="fas fa-chart-pie mr-2"></i>Dashboard
           </NuxtLink>
-          <button @click="showAll" class="nav-link text-white hover:text-green-100 font-medium py-2">
+          <button @click="$emit('show-all')" class="nav-link text-white hover:text-green-100 font-medium py-2">
             <i class="fas fa-list mr-2"></i>All Properties
           </button>
-          <button @click="showConstruction" class="nav-link text-white hover:text-green-100 font-medium py-2">
+          <button @click="$emit('show-construction')" class="nav-link text-white hover:text-green-100 font-medium py-2">
             <i class="fas fa-hard-hat mr-2"></i>In Construction
           </button>
-          <button @click="showCompleted" class="nav-link text-white hover:text-green-100 font-medium py-2">
+          <button @click="$emit('show-completed')" class="nav-link text-white hover:text-green-100 font-medium py-2">
             <i class="fas fa-check-circle mr-2"></i>Completed
           </button>
         </nav>
@@ -41,22 +41,5 @@
 </template>
 
 <script setup>
-import { useProperties } from '~/composables/useProperties';
-
-const { showPropertiesByCategory, showAllProperties } = useProperties();
-
-const showAll = () => {
-  showAllProperties();
-  navigateTo('/?view=list');
-};
-
-const showConstruction = () => {
-  showPropertiesByCategory('Construction');
-  navigateTo('/?view=list');
-};
-
-const showCompleted = () => {
-  showPropertiesByCategory('Completed');
-  navigateTo('/?view=list');
-};
+// No composable logic needed here; emit events to parent
 </script> 
