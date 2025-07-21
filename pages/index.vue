@@ -373,6 +373,8 @@ const showCompletedAndScroll = () => {
 const showUpcomingDeadlines = () => {
   const today = new Date();
   const in30 = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+  // Use the composable's allProperties and filteredProperties
+  showAllProperties(); // Reset to all first
   // Use the same robust date parser as in filterProperties
   const parseDeadline = (raw) => {
     if (!raw) return null;
@@ -390,12 +392,14 @@ const showUpcomingDeadlines = () => {
     }
     return null;
   };
+  // Use the composable's filteredProperties ref
   filteredProperties.value = allProperties.value.filter(property => {
     const deadlineDate = parseDeadline(property.deadline);
     if (!deadlineDate || isNaN(deadlineDate.getTime())) return false;
     return deadlineDate.getTime() >= today.getTime() && deadlineDate.getTime() <= in30.getTime();
   });
   currentView.value = 'list';
+  scrollToList();
 };
 function scrollToList() {
   nextTick(() => {
