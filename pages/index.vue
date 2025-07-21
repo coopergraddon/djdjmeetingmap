@@ -399,9 +399,16 @@ const showUpcomingDeadlines = () => {
   // Actually filter
   filteredProperties.value = allProperties.value.filter(property => {
     const deadlineDate = parseDeadline(property.deadline);
-    const targetCompletionDate = parseDeadline(property['target completion'] || property['Target Completion']);
     const inRange = (date) => date && !isNaN(date.getTime()) && date.getTime() >= today.getTime() && date.getTime() <= in30.getTime();
-    return inRange(deadlineDate) || inRange(targetCompletionDate);
+    const result = inRange(deadlineDate);
+    // Debug log
+    console.log({
+      address: property.address,
+      deadline: property.deadline,
+      parsed: deadlineDate,
+      inRange: result
+    });
+    return result;
   });
   currentView.value = 'list';
   nextTick(() => {
