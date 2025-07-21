@@ -217,13 +217,15 @@ const {
   handleViewArcGIS,
   startAutoRefresh,
   stopAutoRefresh,
-  filterProperties // Added filterProperties to the composable
+  filterProperties, // Ensure this is imported
+  searchField,
+  completionFrom,
+  completionTo
 } = useProperties();
 
 const phaseChartCanvas = ref(null);
 let phaseChart = null;
 
-const searchField = ref('all');
 const searchFieldLabel = computed(() => {
   switch (searchField.value) {
     case 'address': return 'address';
@@ -233,9 +235,6 @@ const searchFieldLabel = computed(() => {
     default: return 'address, city, APN, or client';
   }
 });
-
-const completionFrom = ref('');
-const completionTo = ref('');
 
 
 const openArcGISMap = () => {
@@ -372,9 +371,7 @@ function scrollToList() {
 }
 
 const triggerSearch = () => {
-  // This will trigger the filterProperties watcher by updating a dummy ref
-  // or you can call filterProperties directly if imported
-  if (typeof filterProperties === 'function') filterProperties();
+  filterProperties();
 };
 
 const resetFilters = () => {

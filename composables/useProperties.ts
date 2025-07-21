@@ -305,6 +305,7 @@ export const useProperties = () => {
     stopAutoRefresh,
     searchField,
     completionFrom,
-    completionTo
+    completionTo,
+    filterProperties
   };
 }; 
