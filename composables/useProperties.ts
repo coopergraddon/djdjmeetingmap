@@ -184,13 +184,20 @@ export const useProperties = () => {
       let matchesDate = true;
       if (completionFrom.value || completionTo.value) {
         const deadlineDate = parseDeadline(property.deadline, property);
-        // If the user set a date range, only filter out properties with a valid, parseable deadline
-        if (!deadlineDate || isNaN(deadlineDate.getTime())) {
-          // If the user set a date range, and the property has no valid deadline, exclude it
-          return false;
-        }
         const fromTime = completionFrom.value ? new Date(completionFrom.value).getTime() : null;
         const toTime = completionTo.value ? new Date(completionTo.value).getTime() : null;
+        // Debug log
+        console.log({
+          address: property.address,
+          raw: property.deadline,
+          parsed: deadlineDate,
+          from: completionFrom.value,
+          to: completionTo.value,
+          fromTime,
+          toTime,
+          deadlineTime: deadlineDate ? deadlineDate.getTime() : null
+        });
+        if (!deadlineDate || isNaN(deadlineDate.getTime())) return false;
         if (fromTime !== null && deadlineDate.getTime() < fromTime) matchesDate = false;
         if (toTime !== null && deadlineDate.getTime() > toTime) matchesDate = false;
       }
