@@ -189,13 +189,16 @@
         </div>
         
         <!-- Properties Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div v-if="filteredProperties.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <PropertyCard 
             v-for="property in filteredProperties" 
             :key="property.id" 
             :property="property"
             @view-arcgis="handleViewArcGIS(property.apn)"
           />
+        </div>
+        <div v-else class="text-center text-gray-500 text-xl py-12">
+          No properties found for the selected criteria.
         </div>
       </div>
     </main>
@@ -406,7 +409,7 @@ const showUpcomingDeadlines = () => {
   filteredProperties.value = filtered;
   currentView.value = 'list';
   // Debug output
-  console.log('Filtered properties for next 30 days:', filtered.map(p => ({
+  console.log('Filtered properties for next 30 days:', filtered.length, filtered.map(p => ({
     address: p.address,
     deadline: p.deadline
   })));

@@ -48,10 +48,16 @@
             <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ property.address || 'Property Details' }}</h1>
             <p class="text-gray-600">Comprehensive property information and project status</p>
           </div>
-          <NuxtLink to="/" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 shadow-lg">
-            <i class="fas fa-arrow-left"></i>
-            <span>Back to Dashboard</span>
-          </NuxtLink>
+          <div class="flex gap-3">
+            <button @click="goBack" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 shadow-lg">
+              <i class="fas fa-arrow-left"></i>
+              <span>Back to Search Results</span>
+            </button>
+            <NuxtLink to="/" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 shadow-lg">
+              <i class="fas fa-arrow-left"></i>
+              <span>Back to Dashboard</span>
+            </NuxtLink>
+          </div>
         </div>
         
         <PropertyDetail :property="property" />
@@ -88,6 +94,10 @@ const goToConstruction = () => {
 const goToCompleted = () => {
   showPropertiesByCategory('Completed', ['Listed', 'Sold', 'Pending']);
   router.push('/?view=list');
+};
+
+const goBack = () => {
+  router.back();
 };
 
 onMounted(async () => {
