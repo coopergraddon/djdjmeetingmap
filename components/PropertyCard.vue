@@ -4,6 +4,10 @@
       <div class="flex justify-between items-start mb-6">
         <div class="flex-1">
           <h3 class="text-xl font-bold text-gray-900 mb-2">{{ property.address }}</h3>
+          <div v-if="property.lot" class="flex items-center space-x-2 text-sm text-gray-600 mb-1">
+            <i class="fas fa-th-large"></i>
+            <span>Lot #{{ property.lot }}</span>
+          </div>
           <div class="flex items-center space-x-2 text-sm text-gray-600">
             <i class="fas fa-map-marker-alt"></i>
             <span>{{ property.city }}</span>
