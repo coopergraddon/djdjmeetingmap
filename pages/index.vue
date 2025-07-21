@@ -373,7 +373,7 @@ const showCompletedAndScroll = () => {
 const showUpcomingDeadlines = () => {
   const today = new Date();
   const in30 = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
-  // Use the robust date parser from the composable
+  // Robust date parser
   const parseDeadline = (raw) => {
     if (!raw) return null;
     const s = raw.trim();
@@ -390,27 +390,26 @@ const showUpcomingDeadlines = () => {
     }
     return null;
   };
-  // Clear other filters
+  // Clear all filters
   searchTerm.value = '';
   searchField.value = 'all';
   selectedPhase.value = '';
   completionFrom.value = '';
   completionTo.value = '';
-  // Actually filter
-  filteredProperties.value = allProperties.value.filter(property => {
+  // Filter properties
+  const filtered = allProperties.value.filter(property => {
     const deadlineDate = parseDeadline(property.deadline);
-    const inRange = (date) => date && !isNaN(date.getTime()) && date.getTime() >= today.getTime() && date.getTime() <= in30.getTime();
-    const result = inRange(deadlineDate);
-    // Debug log
-    console.log({
-      address: property.address,
-      deadline: property.deadline,
-      parsed: deadlineDate,
-      inRange: result
-    });
-    return result;
+    if (!deadlineDate || isNaN(deadlineDate.getTime())) return false;
+    // Only include if deadline is within the next 30 days (inclusive)
+    return deadlineDate >= today && deadlineDate <= in30;
   });
+  filteredProperties.value = filtered;
   currentView.value = 'list';
+  // Debug output
+  console.log('Filtered properties for next 30 days:', filtered.map(p => ({
+    address: p.address,
+    deadline: p.deadline
+  })));
   nextTick(() => {
     const el = document.querySelector('.animate-fade-in');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
