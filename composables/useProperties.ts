@@ -154,14 +154,16 @@ export const useProperties = () => {
       let matchesDate = true;
       if (completionFrom.value || completionTo.value) {
         if (!property.deadline) return false;
-        // Try to parse deadline as YYYY-MM-DD, fallback to MM/DD/YY or MM/DD/YYYY
+        // Clean up and trim the deadline string
+        const rawDeadline = property.deadline.trim();
         let deadlineDate = null;
-        if (/\d{4}-\d{2}-\d{2}/.test(property.deadline)) {
-          deadlineDate = new Date(property.deadline);
-        } else if (/\d{1,2}\/\d{1,2}\/\d{2,4}/.test(property.deadline)) {
+        // Try YYYY-MM-DD
+        if (/^\d{4}-\d{2}-\d{2}$/.test(rawDeadline)) {
+          deadlineDate = new Date(rawDeadline);
+        } else if (/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(rawDeadline)) {
           // Convert MM/DD/YY or MM/DD/YYYY to YYYY-MM-DD
-          const [m, d, y] = property.deadline.split('/');
-          let year = y.length === 2 ? '20' + y : y;
+          const [m, d, y] = rawDeadline.split('/');
+          let year = y.length === 2 ? (parseInt(y) > 50 ? '19' + y : '20' + y) : y;
           deadlineDate = new Date(`${year}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`);
         }
         if (!deadlineDate || isNaN(deadlineDate.getTime())) return false;
