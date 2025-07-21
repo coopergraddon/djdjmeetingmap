@@ -139,9 +139,9 @@
         <!-- Search and Filter -->
         <div class="glass-effect rounded-2xl p-6 shadow-lg">
           <form @submit.prevent="triggerSearch" class="flex flex-col md:flex-row gap-4">
-            <div class="flex-1 relative">
+            <div class="flex-1 relative max-w-xl w-full">
               <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-              <input v-model="searchTerm" type="text" :placeholder="`Search by ${searchFieldLabel}...`" class="w-full pl-12 pr-4 py-5 text-lg border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white/80" @keyup.enter="triggerSearch">
+              <input v-model="searchTerm" type="text" :placeholder="`Search by ${searchFieldLabel}...`" class="w-full pl-12 pr-4 py-3 text-lg border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white/80" @keyup.enter="triggerSearch">
             </div>
             <div>
               <select v-model="searchField" class="pl-4 pr-8 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 bg-white/80 min-w-[160px]">
@@ -168,11 +168,11 @@
               </select>
             </div>
             <div class="flex flex-col md:flex-row gap-2 items-center">
-              <label class="text-gray-600 text-sm">Completion From</label>
+              <label class="text-gray-600 text-sm">Deadline From</label>
               <input v-model="completionFrom" type="date" class="border border-gray-200 rounded-xl px-3 py-2 bg-white/80" />
             </div>
             <div class="flex flex-col md:flex-row gap-2 items-center">
-              <label class="text-gray-600 text-sm">Completion To</label>
+              <label class="text-gray-600 text-sm">Deadline To</label>
               <input v-model="completionTo" type="date" class="border border-gray-200 rounded-xl px-3 py-2 bg-white/80" />
             </div>
             <div class="flex items-end">
