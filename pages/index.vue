@@ -7,6 +7,13 @@
       @click-dashboard="showPortfolioOverviewAndScroll"
     />
 
+    <div class="flex justify-end items-center mt-6 mb-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <button @click="showUpcomingDeadlines" class="flex items-center gap-2 bg-red-100 hover:bg-red-200 text-red-700 px-5 py-3 rounded-xl font-semibold shadow transition-all">
+        <i class="fas fa-exclamation-circle text-red-600 text-2xl"></i>
+        <span>Show Properties with Deadline in Next 30 Days</span>
+      </button>
+    </div>
+
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <!-- Portfolio Overview -->
@@ -362,6 +369,33 @@ const showPortfolioOverviewAndScroll = () => {
 const showCompletedAndScroll = () => {
   showPropertiesByCategory('Completed', ['Listed', 'Sold', 'Pending']);
   scrollToList();
+};
+const showUpcomingDeadlines = () => {
+  const today = new Date();
+  const in30 = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+  // Use the same robust date parser as in filterProperties
+  const parseDeadline = (raw) => {
+    if (!raw) return null;
+    const s = raw.trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return new Date(s);
+    if (/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(s)) {
+      const [m, d, y] = s.split('/');
+      let year = y.length === 2 ? (parseInt(y, 10) > 50 ? 1900 + parseInt(y, 10) : 2000 + parseInt(y, 10)) : parseInt(y, 10);
+      return new Date(year, parseInt(m, 10) - 1, parseInt(d, 10));
+    }
+    if (/^\d{1,2}-\d{1,2}-\d{2,4}$/.test(s)) {
+      const [m, d, y] = s.split('-');
+      let year = y.length === 2 ? (parseInt(y, 10) > 50 ? 1900 + parseInt(y, 10) : 2000 + parseInt(y, 10)) : parseInt(y, 10);
+      return new Date(year, parseInt(m, 10) - 1, parseInt(d, 10));
+    }
+    return null;
+  };
+  filteredProperties.value = allProperties.value.filter(property => {
+    const deadlineDate = parseDeadline(property.deadline);
+    if (!deadlineDate || isNaN(deadlineDate.getTime())) return false;
+    return deadlineDate.getTime() >= today.getTime() && deadlineDate.getTime() <= in30.getTime();
+  });
+  currentView.value = 'list';
 };
 function scrollToList() {
   nextTick(() => {
