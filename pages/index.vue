@@ -373,7 +373,7 @@ const showCompletedAndScroll = () => {
 const showUpcomingDeadlines = () => {
   const today = new Date();
   const in30 = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
-  // Use the same robust date parser as in filterProperties
+  // Use the robust date parser from the composable
   const parseDeadline = (raw) => {
     if (!raw) return null;
     const s = raw.trim();
@@ -390,13 +390,23 @@ const showUpcomingDeadlines = () => {
     }
     return null;
   };
+  // Clear other filters
+  searchTerm.value = '';
+  searchField.value = 'all';
+  selectedPhase.value = '';
+  completionFrom.value = '';
+  completionTo.value = '';
+  // Actually filter
   filteredProperties.value = allProperties.value.filter(property => {
     const deadlineDate = parseDeadline(property.deadline);
     if (!deadlineDate || isNaN(deadlineDate.getTime())) return false;
     return deadlineDate.getTime() >= today.getTime() && deadlineDate.getTime() <= in30.getTime();
   });
   currentView.value = 'list';
-  scrollToList();
+  nextTick(() => {
+    const el = document.querySelector('.animate-fade-in');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  });
 };
 function scrollToList() {
   nextTick(() => {
