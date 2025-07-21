@@ -18,5 +18,8 @@ export default defineNuxtConfig({
         { src: 'https://cdn.tailwindcss.com' }
       ]
     }
-  }
-}) 
+  },
+  runtimeConfig: {
+    SITE_PASSWORD: process.env.SITE_PASSWORD,
+  },
+}); 
