@@ -60,7 +60,7 @@
         </div>
 
         <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           <div @click="showAllProperties()" class="stats-card card-hover rounded-2xl p-8 text-center cursor-pointer">
             <div class="w-16 h-16 mx-auto mb-4 rounded-full gradient-bg flex items-center justify-center">
               <i class="fas fa-home text-2xl text-white"></i>
@@ -92,6 +92,15 @@
             <div class="text-3xl font-bold text-gray-900 mb-2">{{ allProperties.filter(p => ['Sold', 'Listed', 'Pending'].includes(p.phase)).length }}</div>
             <div class="text-gray-600 font-medium">Completed</div>
             <div class="mt-2 text-sm text-purple-600">Finished Projects</div>
+          </div>
+          <!-- MLS Properties Button -->
+          <div @click="showMLSProperties" class="stats-card card-hover rounded-2xl p-8 text-center cursor-pointer">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center">
+              <i class="fas fa-building text-2xl text-white"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-900 mb-2">MLS</div>
+            <div class="text-gray-600 font-medium">MLS Properties</div>
+            <div class="mt-2 text-sm text-pink-600">Whatcom County</div>
           </div>
         </div>
 
@@ -132,6 +141,24 @@
           </div>
         </div>
         
+        </div>
+      </div>
+
+      <!-- MLS Properties View -->
+      <div v-if="currentView === 'mls'" class="space-y-8 animate-fade-in">
+        <div class="flex justify-between items-center mb-4">
+          <h1 class="text-4xl font-bold text-gray-900 mb-2">MLS Properties</h1>
+          <button @click="showPortfolioOverview" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 shadow-lg">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Dashboard</span>
+          </button>
+        </div>
+        <div class="flex gap-6 mb-8">
+          <button class="flex-1 bg-pink-100 hover:bg-pink-200 text-pink-700 px-6 py-4 rounded-xl font-semibold shadow transition-all">Properties to Review</button>
+          <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-4 rounded-xl font-semibold shadow transition-all">Other Properties</button>
+        </div>
+        <div class="text-center text-gray-500 text-xl py-12">
+          MLS integration coming soon...
         </div>
       </div>
 
@@ -410,6 +437,10 @@ function cacheSearchState() {
     completionTo: completionTo.value
   };
   sessionStorage.setItem('propertySearchState', JSON.stringify(state));
+}
+
+function showMLSProperties() {
+  currentView.value = 'mls';
 }
 
 onMounted(async () => {
