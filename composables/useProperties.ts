@@ -93,6 +93,27 @@ export const useProperties = () => {
     });
   }
 
+  // Helper to parse deadline in various formats
+  function parseDeadline(raw: string | undefined) {
+    if (!raw) return null;
+    const s = raw.trim();
+    // Try YYYY-MM-DD
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return new Date(s);
+    // Try MM/DD/YYYY or MM/DD/YY
+    if (/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(s)) {
+      const [m, d, y] = s.split('/');
+      let year = y.length === 2 ? (parseInt(y) > 50 ? '19' + y : '20' + y) : y;
+      return new Date(`${year}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`);
+    }
+    // Try MM-DD-YYYY or MM-DD-YY
+    if (/^\d{1,2}-\d{1,2}-\d{2,4}$/.test(s)) {
+      const [m, d, y] = s.split('-');
+      let year = y.length === 2 ? (parseInt(y) > 50 ? '19' + y : '20' + y) : y;
+      return new Date(`${year}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`);
+    }
+    return null;
+  }
+
   const fetchProperties = async () => {
     isLoading.value = true;
     error.value = null;
@@ -150,22 +171,10 @@ export const useProperties = () => {
         }
       }
       const matchesPhase = !phase || property.phase === phase;
-      // Filter by completion date range
+      // Filter by deadline date range
       let matchesDate = true;
       if (completionFrom.value || completionTo.value) {
-        if (!property.deadline) return false;
-        // Clean up and trim the deadline string
-        const rawDeadline = property.deadline.trim();
-        let deadlineDate = null;
-        // Try YYYY-MM-DD
-        if (/^\d{4}-\d{2}-\d{2}$/.test(rawDeadline)) {
-          deadlineDate = new Date(rawDeadline);
-        } else if (/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(rawDeadline)) {
-          // Convert MM/DD/YY or MM/DD/YYYY to YYYY-MM-DD
-          const [m, d, y] = rawDeadline.split('/');
-          let year = y.length === 2 ? (parseInt(y) > 50 ? '19' + y : '20' + y) : y;
-          deadlineDate = new Date(`${year}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`);
-        }
+        const deadlineDate = parseDeadline(property.deadline);
         if (!deadlineDate || isNaN(deadlineDate.getTime())) return false;
         const fromTime = completionFrom.value ? new Date(completionFrom.value).getTime() : null;
         const toTime = completionTo.value ? new Date(completionTo.value).getTime() : null;
