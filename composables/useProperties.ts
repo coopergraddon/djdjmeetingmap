@@ -93,8 +93,8 @@ export const useProperties = () => {
     });
   }
 
-  // Helper to parse deadline in various formats
-  function parseDeadline(raw: string | undefined) {
+  // Helper to parse deadline in various formats, with debug logging
+  function parseDeadline(raw: string | undefined, property?: any) {
     if (!raw) return null;
     const s = raw.trim();
     // Try YYYY-MM-DD
@@ -114,6 +114,11 @@ export const useProperties = () => {
         ? (parseInt(y, 10) > 50 ? 1900 + parseInt(y, 10) : 2000 + parseInt(y, 10))
         : parseInt(y, 10);
       return new Date(year, parseInt(m, 10) - 1, parseInt(d, 10));
+    }
+    // Log unparseable dates for debugging
+    if (property) {
+      // eslint-disable-next-line no-console
+      console.warn('Unparseable deadline:', s, 'for property:', property.address || property.apn);
     }
     return null;
   }
@@ -178,8 +183,12 @@ export const useProperties = () => {
       // Filter by deadline date range
       let matchesDate = true;
       if (completionFrom.value || completionTo.value) {
-        const deadlineDate = parseDeadline(property.deadline);
-        if (!deadlineDate || isNaN(deadlineDate.getTime())) return false;
+        const deadlineDate = parseDeadline(property.deadline, property);
+        // If the user set a date range, only filter out properties with a valid, parseable deadline
+        if (!deadlineDate || isNaN(deadlineDate.getTime())) {
+          // If the user set a date range, and the property has no valid deadline, exclude it
+          return false;
+        }
         const fromTime = completionFrom.value ? new Date(completionFrom.value).getTime() : null;
         const toTime = completionTo.value ? new Date(completionTo.value).getTime() : null;
         if (fromTime !== null && deadlineDate.getTime() < fromTime) matchesDate = false;
