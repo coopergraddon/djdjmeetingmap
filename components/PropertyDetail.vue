@@ -14,6 +14,10 @@
             <span class="text-gray-600 font-medium">Address:</span>
             <span class="font-bold text-gray-900">{{ property.address }}</span>
           </div>
+          <div v-if="property.lot" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+            <span class="text-gray-600 font-medium">Lot #:</span>
+            <span class="font-bold text-gray-900">{{ property.lot }}</span>
+          </div>
           <div v-if="property.apn" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
             <span class="text-gray-600 font-medium">APN/Geo ID:</span>
             <span class="font-mono font-bold text-gray-900">{{ property.apn }}</span>

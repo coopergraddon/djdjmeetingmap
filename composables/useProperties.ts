@@ -43,6 +43,9 @@ export const useProperties = () => {
   const isLoading = ref(false);
   const error = ref<string | null>(null);
   const lastUpdated = ref<string | null>(null);
+  const searchField = ref('all');
+  const completionFrom = ref('');
+  const completionTo = ref('');
 
   const getPhaseColor = (phase: string) => {
     const colors: Record<string, string> = {
@@ -79,6 +82,17 @@ export const useProperties = () => {
     return icons[phase] || 'fas fa-info';
   };
 
+  // Helper to deduplicate properties by APN or address
+  function deduplicateProperties(properties: Property[]) {
+    const seen = new Set();
+    return properties.filter(p => {
+      const key = (p.apn || '').toLowerCase() || (p.address || '').toLowerCase();
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
   const fetchProperties = async () => {
     isLoading.value = true;
     error.value = null;
@@ -87,7 +101,8 @@ export const useProperties = () => {
       const response = await $fetch('/api/properties');
       
       if (response.success) {
-        allProperties.value = response.properties;
+        // Deduplicate on load
+        allProperties.value = deduplicateProperties(response.properties);
         if ('lastUpdated' in response && response.lastUpdated) {
           lastUpdated.value = response.lastUpdated;
         }
@@ -107,16 +122,55 @@ export const useProperties = () => {
   };
 
   const filterProperties = () => {
-    const search = searchTerm.value.toLowerCase();
+    const search = searchTerm.value.trim().toLowerCase();
     const phase = selectedPhase.value;
-    
-    filteredProperties.value = allProperties.value.filter(property => {
-      const matchesSearch = property.address?.toLowerCase().includes(search) || 
-                          property.apn?.includes(search) ||
-                          property.city?.toLowerCase().includes(search) ||
-                          property.client?.toLowerCase().includes(search);
+    let base = deduplicateProperties(allProperties.value);
+    filteredProperties.value = base.filter(property => {
+      let matchesSearch = true;
+      if (search) {
+        switch (searchField.value) {
+          case 'address':
+            matchesSearch = !!property.address && property.address.toLowerCase().includes(search);
+            break;
+          case 'city':
+            matchesSearch = !!property.city && property.city.toLowerCase().includes(search);
+            break;
+          case 'apn':
+            matchesSearch = !!property.apn && property.apn.toLowerCase().includes(search);
+            break;
+          case 'client':
+            matchesSearch = !!property.client && property.client.toLowerCase().includes(search);
+            break;
+          default:
+            matchesSearch =
+              (!!property.address && property.address.toLowerCase().includes(search)) ||
+              (!!property.apn && property.apn.toLowerCase().includes(search)) ||
+              (!!property.city && property.city.toLowerCase().includes(search)) ||
+              (!!property.client && property.client.toLowerCase().includes(search));
+        }
+      }
       const matchesPhase = !phase || property.phase === phase;
-      return matchesSearch && matchesPhase;
+      // Filter by completion date range
+      let matchesDate = true;
+      if (completionFrom.value || completionTo.value) {
+        if (!property.deadline) return false;
+        // Try to parse deadline as YYYY-MM-DD, fallback to MM/DD/YY or MM/DD/YYYY
+        let deadlineDate = null;
+        if (/\d{4}-\d{2}-\d{2}/.test(property.deadline)) {
+          deadlineDate = new Date(property.deadline);
+        } else if (/\d{1,2}\/\d{1,2}\/\d{2,4}/.test(property.deadline)) {
+          // Convert MM/DD/YY or MM/DD/YYYY to YYYY-MM-DD
+          const [m, d, y] = property.deadline.split('/');
+          let year = y.length === 2 ? '20' + y : y;
+          deadlineDate = new Date(`${year}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`);
+        }
+        if (!deadlineDate || isNaN(deadlineDate.getTime())) return false;
+        const fromTime = completionFrom.value ? new Date(completionFrom.value).getTime() : null;
+        const toTime = completionTo.value ? new Date(completionTo.value).getTime() : null;
+        if (fromTime !== null && deadlineDate.getTime() < fromTime) matchesDate = false;
+        if (toTime !== null && deadlineDate.getTime() > toTime) matchesDate = false;
+      }
+      return matchesSearch && matchesPhase && matchesDate;
     });
   };
 
@@ -181,7 +235,7 @@ export const useProperties = () => {
   };
 
   // Watch for changes in search and filter
-  watch([searchTerm, selectedPhase], filterProperties);
+  watch([searchTerm, selectedPhase, searchField, completionFrom, completionTo], filterProperties);
 
   // Auto-refresh data every 5 minutes
   let refreshInterval: NodeJS.Timeout;
@@ -217,6 +271,9 @@ export const useProperties = () => {
     handleViewArcGIS,
     handleViewCounty,
     startAutoRefresh,
-    stopAutoRefresh
+    stopAutoRefresh,
+    searchField,
+    completionFrom,
+    completionTo
   };
 }; 

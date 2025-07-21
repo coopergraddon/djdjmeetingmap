@@ -1,6 +1,11 @@
 <template>
   <div class="bg-gray-50 min-h-screen">
-    <AppHeader />
+    <AppHeader 
+      @show-all="goToAllProperties"
+      @show-construction="goToConstruction"
+      @show-completed="goToCompleted"
+      @click-dashboard="goToDashboard"
+    />
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -57,12 +62,33 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useProperties } from '~/composables/useProperties';
 import PropertyDetail from '~/components/PropertyDetail.vue';
 
 const route = useRoute();
+const router = useRouter();
+const { showAllProperties, showPropertiesByCategory, showPortfolioOverview } = useProperties();
 const isLoading = ref(true);
 const error = ref(null);
 const property = ref(null);
+
+const goToDashboard = () => {
+  showPortfolioOverview();
+  router.push('/');
+};
+const goToAllProperties = () => {
+  showAllProperties();
+  router.push('/?view=list');
+};
+const goToConstruction = () => {
+  showPropertiesByCategory('Construction');
+  router.push('/?view=list');
+};
+const goToCompleted = () => {
+  showPropertiesByCategory('Completed', ['Listed', 'Sold', 'Pending']);
+  router.push('/?view=list');
+};
 
 onMounted(async () => {
   isLoading.value = true;

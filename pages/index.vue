@@ -141,7 +141,16 @@
           <div class="flex flex-col md:flex-row gap-4">
             <div class="flex-1 relative">
               <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-              <input v-model="searchTerm" type="text" placeholder="Search by address, APN, or city..." class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white/80">
+              <input v-model="searchTerm" type="text" :placeholder="`Search by ${searchFieldLabel}...`" class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white/80">
+            </div>
+            <div>
+              <select v-model="searchField" class="pl-4 pr-8 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 bg-white/80 min-w-[160px]">
+                <option value="all">All Fields</option>
+                <option value="address">Address</option>
+                <option value="city">City</option>
+                <option value="apn">APN</option>
+                <option value="client">Client</option>
+              </select>
             </div>
             <div class="relative">
               <i class="fas fa-filter absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -157,6 +166,14 @@
                 <option value="Pending">Pending</option>
                 <option value="Delete">Delete</option>
               </select>
+            </div>
+            <div class="flex flex-col md:flex-row gap-2 items-center">
+              <label class="text-gray-600 text-sm">Completion From</label>
+              <input v-model="completionFrom" type="date" class="border border-gray-200 rounded-xl px-3 py-2 bg-white/80" />
+            </div>
+            <div class="flex flex-col md:flex-row gap-2 items-center">
+              <label class="text-gray-600 text-sm">Completion To</label>
+              <input v-model="completionTo" type="date" class="border border-gray-200 rounded-xl px-3 py-2 bg-white/80" />
             </div>
           </div>
         </div>
@@ -176,7 +193,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick, computed } from 'vue';
 import { useProperties } from '~/composables/useProperties';
 import PropertyCard from '~/components/PropertyCard.vue';
 // CsvUploader import removed
@@ -202,6 +219,19 @@ const {
 const phaseChartCanvas = ref(null);
 let phaseChart = null;
 
+const searchField = ref('all');
+const searchFieldLabel = computed(() => {
+  switch (searchField.value) {
+    case 'address': return 'address';
+    case 'city': return 'city';
+    case 'apn': return 'APN';
+    case 'client': return 'client name';
+    default: return 'address, city, APN, or client';
+  }
+});
+
+const completionFrom = ref('');
+const completionTo = ref('');
 
 
 const openArcGISMap = () => {
