@@ -138,10 +138,10 @@
         
         <!-- Search and Filter -->
         <div class="glass-effect rounded-2xl p-6 shadow-lg">
-          <div class="flex flex-col md:flex-row gap-4">
+          <form @submit.prevent="triggerSearch" class="flex flex-col md:flex-row gap-4">
             <div class="flex-1 relative">
               <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-              <input v-model="searchTerm" type="text" :placeholder="`Search by ${searchFieldLabel}...`" class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white/80">
+              <input v-model="searchTerm" type="text" :placeholder="`Search by ${searchFieldLabel}...`" class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white/80" @keyup.enter="triggerSearch">
             </div>
             <div>
               <select v-model="searchField" class="pl-4 pr-8 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 bg-white/80 min-w-[160px]">
@@ -175,7 +175,11 @@
               <label class="text-gray-600 text-sm">Completion To</label>
               <input v-model="completionTo" type="date" class="border border-gray-200 rounded-xl px-3 py-2 bg-white/80" />
             </div>
-          </div>
+            <div class="flex items-end gap-2">
+              <button type="submit" class="btn-primary px-6 py-3 rounded-xl font-semibold text-white">Search</button>
+              <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-xl font-semibold" @click="resetFilters">Reset</button>
+            </div>
+          </form>
         </div>
         
         <!-- Properties Grid -->
@@ -213,7 +217,8 @@ const {
   showPropertiesByCategory,
   handleViewArcGIS,
   startAutoRefresh,
-  stopAutoRefresh
+  stopAutoRefresh,
+  filterProperties // Added filterProperties to the composable
 } = useProperties();
 
 const phaseChartCanvas = ref(null);
@@ -366,6 +371,21 @@ function scrollToList() {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   });
 }
+
+const triggerSearch = () => {
+  // This will trigger the filterProperties watcher by updating a dummy ref
+  // or you can call filterProperties directly if imported
+  if (typeof filterProperties === 'function') filterProperties();
+};
+
+const resetFilters = () => {
+  searchTerm.value = '';
+  searchField.value = 'all';
+  selectedPhase.value = '';
+  completionFrom.value = '';
+  completionTo.value = '';
+  showAllProperties();
+};
 
 onMounted(async () => {
   await nextTick();
