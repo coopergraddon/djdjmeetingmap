@@ -9,6 +9,18 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <!-- ArcGIS Map Embed -->
+      <div class="mb-10 rounded-2xl overflow-hidden shadow-lg border border-gray-200">
+        <iframe
+          src="https://experience.arcgis.com/experience/c69f053c68e84a0ab98bc80b00836949/"
+          width="100%"
+          height="500"
+          style="border:0; min-height:400px; width:100%;"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
       <!-- Portfolio Overview -->
       <div v-if="currentView === 'overview'" class="space-y-10 animate-fade-in">
         <!-- Loading State -->

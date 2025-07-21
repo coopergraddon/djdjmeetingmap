@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="flex gap-3">
-        <NuxtLink :to="`/property/${property.apn}`" class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2">
+        <NuxtLink :to="`/property/${property.apn}`" class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2" @click.native="cacheSearchState">
           <i class="fas fa-info-circle"></i>
           <span>Details</span>
         </NuxtLink>
@@ -76,5 +76,16 @@ const props = defineProps({
 
 const emit = defineEmits(['view-arcgis']);
 
-const { getPhaseColor, getPhaseIcon } = useProperties();
+const { getPhaseColor, getPhaseIcon, searchTerm, searchField, selectedPhase, completionFrom, completionTo } = useProperties();
+
+function cacheSearchState() {
+  const state = {
+    searchTerm: searchTerm.value,
+    searchField: searchField.value,
+    selectedPhase: selectedPhase.value,
+    completionFrom: completionFrom.value,
+    completionTo: completionTo.value
+  };
+  sessionStorage.setItem('propertySearchState', JSON.stringify(state));
+}
 </script> 
