@@ -102,14 +102,18 @@ export const useProperties = () => {
     // Try M/D/YY or M/D/YYYY or MM/DD/YY or MM/DD/YYYY
     if (/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(s)) {
       const [m, d, y] = s.split('/');
-      let year = y.length === 2 ? (parseInt(y) > 50 ? '19' + y : '20' + y) : y;
-      return new Date(`${year}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`);
+      let year = y.length === 2
+        ? (parseInt(y, 10) > 50 ? 1900 + parseInt(y, 10) : 2000 + parseInt(y, 10))
+        : parseInt(y, 10);
+      return new Date(year, parseInt(m, 10) - 1, parseInt(d, 10));
     }
     // Try M-D-YY or M-D-YYYY or MM-DD-YY or MM-DD-YYYY
     if (/^\d{1,2}-\d{1,2}-\d{2,4}$/.test(s)) {
       const [m, d, y] = s.split('-');
-      let year = y.length === 2 ? (parseInt(y) > 50 ? '19' + y : '20' + y) : y;
-      return new Date(`${year}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`);
+      let year = y.length === 2
+        ? (parseInt(y, 10) > 50 ? 1900 + parseInt(y, 10) : 2000 + parseInt(y, 10))
+        : parseInt(y, 10);
+      return new Date(year, parseInt(m, 10) - 1, parseInt(d, 10));
     }
     return null;
   }
