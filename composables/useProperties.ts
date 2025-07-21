@@ -99,13 +99,13 @@ export const useProperties = () => {
     const s = raw.trim();
     // Try YYYY-MM-DD
     if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return new Date(s);
-    // Try MM/DD/YYYY or MM/DD/YY
+    // Try M/D/YY or M/D/YYYY or MM/DD/YY or MM/DD/YYYY
     if (/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(s)) {
       const [m, d, y] = s.split('/');
       let year = y.length === 2 ? (parseInt(y) > 50 ? '19' + y : '20' + y) : y;
       return new Date(`${year}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`);
     }
-    // Try MM-DD-YYYY or MM-DD-YY
+    // Try M-D-YY or M-D-YYYY or MM-DD-YY or MM-DD-YYYY
     if (/^\d{1,2}-\d{1,2}-\d{2,4}$/.test(s)) {
       const [m, d, y] = s.split('-');
       let year = y.length === 2 ? (parseInt(y) > 50 ? '19' + y : '20' + y) : y;
