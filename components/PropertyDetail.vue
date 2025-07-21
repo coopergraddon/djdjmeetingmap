@@ -138,6 +138,30 @@
       </div>
     </div>
     
+    <!-- Project Manager Info -->
+    <div v-if="property.pmName || property.pmPhone || property.pmEmail" class="glass-effect rounded-2xl p-8 shadow-lg">
+      <div class="flex items-center space-x-3 mb-6">
+        <div class="p-3 rounded-xl bg-gradient-to-br from-indigo-100 to-indigo-200">
+          <i class="fas fa-user-tie text-indigo-600"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900">Project Manager</h3>
+      </div>
+      <div class="space-y-4">
+        <div v-if="property.pmName" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+          <span class="text-gray-600 font-medium">Name:</span>
+          <span class="font-bold text-gray-900">{{ property.pmName }}</span>
+        </div>
+        <div v-if="property.pmPhone" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+          <span class="text-gray-600 font-medium">Phone:</span>
+          <span class="font-bold text-gray-900">{{ property.pmPhone }}</span>
+        </div>
+        <div v-if="property.pmEmail" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+          <span class="text-gray-600 font-medium">Email:</span>
+          <span class="font-bold text-gray-900">{{ property.pmEmail }}</span>
+        </div>
+      </div>
+    </div>
+    
     <!-- Actions -->
     <div class="glass-effect rounded-2xl p-8 shadow-lg">
       <div class="flex items-center space-x-3 mb-6">
