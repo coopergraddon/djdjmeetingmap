@@ -49,7 +49,7 @@
             <p class="text-gray-600">Comprehensive property information and project status</p>
           </div>
           <div class="flex gap-3">
-            <button @click="goBack" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 shadow-lg">
+            <button @click="goBackToSearch" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 shadow-lg">
               <i class="fas fa-arrow-left"></i>
               <span>Back to Search Results</span>
             </button>
@@ -74,7 +74,7 @@ import PropertyDetail from '~/components/PropertyDetail.vue';
 
 const route = useRoute();
 const router = useRouter();
-const { showAllProperties, showPropertiesByCategory, showPortfolioOverview } = useProperties();
+const { showAllProperties, showPropertiesByCategory, showPortfolioOverview, searchTerm, searchField, selectedPhase, completionFrom, completionTo, filterProperties, currentView } = useProperties();
 const isLoading = ref(true);
 const error = ref(null);
 const property = ref(null);
@@ -96,8 +96,27 @@ const goToCompleted = () => {
   router.push('/?view=list');
 };
 
-const goBack = () => {
-  router.back();
+const goBackToSearch = () => {
+  // Restore search/filter state from sessionStorage if available
+  const cached = sessionStorage.getItem('propertySearchState');
+  if (cached) {
+    try {
+      const state = JSON.parse(cached);
+      searchTerm.value = state.searchTerm || '';
+      searchField.value = state.searchField || 'all';
+      selectedPhase.value = state.selectedPhase || '';
+      completionFrom.value = state.completionFrom || '';
+      completionTo.value = state.completionTo || '';
+      filterProperties();
+      currentView.value = 'list';
+      router.push('/?view=list');
+      return;
+    } catch (e) {
+      // fallback to all properties
+    }
+  }
+  showAllProperties();
+  router.push('/?view=list');
 };
 
 onMounted(async () => {

@@ -7,13 +7,6 @@
       @click-dashboard="showPortfolioOverviewAndScroll"
     />
 
-    <div class="flex justify-end items-center mt-6 mb-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <button @click="showUpcomingDeadlines" class="flex items-center gap-2 bg-red-100 hover:bg-red-200 text-red-700 px-5 py-3 rounded-xl font-semibold shadow transition-all">
-        <i class="fas fa-exclamation-circle text-red-600 text-2xl"></i>
-        <span>Show Properties with Deadline in Next 30 Days</span>
-      </button>
-    </div>
-
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <!-- Portfolio Overview -->
@@ -195,6 +188,7 @@
             :key="property.id" 
             :property="property"
             @view-arcgis="handleViewArcGIS(property.apn)"
+            @click="cacheSearchState()"
           />
         </div>
         <div v-else class="text-center text-gray-500 text-xl py-12">
@@ -373,51 +367,7 @@ const showCompletedAndScroll = () => {
   showPropertiesByCategory('Completed', ['Listed', 'Sold', 'Pending']);
   scrollToList();
 };
-const showUpcomingDeadlines = () => {
-  const today = new Date();
-  const in30 = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
-  // Robust date parser
-  const parseDeadline = (raw) => {
-    if (!raw) return null;
-    const s = raw.trim();
-    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return new Date(s);
-    if (/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(s)) {
-      const [m, d, y] = s.split('/');
-      let year = y.length === 2 ? (parseInt(y, 10) > 50 ? 1900 + parseInt(y, 10) : 2000 + parseInt(y, 10)) : parseInt(y, 10);
-      return new Date(year, parseInt(m, 10) - 1, parseInt(d, 10));
-    }
-    if (/^\d{1,2}-\d{1,2}-\d{2,4}$/.test(s)) {
-      const [m, d, y] = s.split('-');
-      let year = y.length === 2 ? (parseInt(y, 10) > 50 ? 1900 + parseInt(y, 10) : 2000 + parseInt(y, 10)) : parseInt(y, 10);
-      return new Date(year, parseInt(m, 10) - 1, parseInt(d, 10));
-    }
-    return null;
-  };
-  // Clear all filters
-  searchTerm.value = '';
-  searchField.value = 'all';
-  selectedPhase.value = '';
-  completionFrom.value = '';
-  completionTo.value = '';
-  // Filter properties
-  const filtered = allProperties.value.filter(property => {
-    const deadlineDate = parseDeadline(property.deadline);
-    if (!deadlineDate || isNaN(deadlineDate.getTime())) return false;
-    // Only include if deadline is within the next 30 days (inclusive)
-    return deadlineDate >= today && deadlineDate <= in30;
-  });
-  filteredProperties.value = filtered;
-  currentView.value = 'list';
-  // Debug output
-  console.log('Filtered properties for next 30 days:', filtered.length, filtered.map(p => ({
-    address: p.address,
-    deadline: p.deadline
-  })));
-  nextTick(() => {
-    const el = document.querySelector('.animate-fade-in');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  });
-};
+
 function scrollToList() {
   nextTick(() => {
     const el = document.querySelector('.animate-fade-in');
@@ -437,6 +387,18 @@ const resetFilters = () => {
   completionTo.value = '';
   showAllProperties();
 };
+
+// Cache search/filter state before navigating to property details
+function cacheSearchState() {
+  const state = {
+    searchTerm: searchTerm.value,
+    searchField: searchField.value,
+    selectedPhase: selectedPhase.value,
+    completionFrom: completionFrom.value,
+    completionTo: completionTo.value
+  };
+  sessionStorage.setItem('propertySearchState', JSON.stringify(state));
+}
 
 onMounted(async () => {
   await nextTick();
