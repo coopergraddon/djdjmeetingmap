@@ -10,7 +10,7 @@
         </NuxtLink>
       </div>
       <div class="flex gap-6 mb-8">
-        <button class="flex-1 bg-pink-100 hover:bg-pink-200 text-pink-700 px-6 py-4 rounded-xl font-semibold shadow transition-all">Properties to Review</button>
+        <button class="flex-1 bg-green-100 hover:bg-green-200 text-green-700 px-6 py-4 rounded-xl font-semibold shadow transition-all">Properties to Review</button>
         <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-4 rounded-xl font-semibold shadow transition-all">Other Properties</button>
       </div>
       <div class="text-center text-gray-500 text-xl py-12">
