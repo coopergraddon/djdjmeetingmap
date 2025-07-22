@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gray-50 min-h-screen">
-    <AppHeader />
+    <AppHeader @click-dashboard="goToDashboard" />
     <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-4xl font-bold text-gray-900 mb-2">MLS Properties</h1>
@@ -22,4 +22,10 @@
 
 <script setup>
 import AppHeader from '~/components/AppHeader.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+function goToDashboard() {
+  router.push('/');
+}
 </script> 
