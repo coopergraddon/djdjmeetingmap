@@ -116,13 +116,10 @@
             <h3 class="text-2xl font-bold text-gray-900">Latest Updates</h3>
           </div>
           <div class="space-y-4">
-            <div v-if="property.latestUpdates" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+            <div v-if="property.latestUpdates" class="flex flex-col p-3 rounded-lg bg-gray-50">
               <span class="text-gray-600 font-medium">Comments:</span>
               <span class="font-bold text-gray-900">{{ property.latestUpdates }}</span>
-            </div>
-            <div v-if="property.dateCommentsAdded" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
-              <span class="text-gray-600 font-medium">Date Comments Added:</span>
-              <span class="font-bold text-gray-900">{{ property.dateCommentsAdded }}</span>
+              <span v-if="property.dateCommentsAdded" class="text-xs text-gray-500 mt-1">Date Added: {{ property.dateCommentsAdded }}</span>
             </div>
           </div>
         </div>
