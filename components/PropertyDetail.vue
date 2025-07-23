@@ -81,29 +81,49 @@
         </div>
       </div>
 
-      <!-- Timeline & Finance -->
-      <div class="glass-effect rounded-2xl p-8 shadow-lg">
-        <div class="flex items-center space-x-3 mb-6">
-          <div class="p-3 rounded-xl bg-gradient-to-br from-yellow-100 to-yellow-200">
-            <i class="fas fa-clock text-yellow-600"></i>
+      <!-- Timeline & Finance and Latest Updates side by side on desktop -->
+      <div class="md:col-span-1 flex flex-col gap-4">
+        <div class="glass-effect rounded-2xl p-8 shadow-lg">
+          <div class="flex items-center space-x-3 mb-6">
+            <div class="p-3 rounded-xl bg-gradient-to-br from-yellow-100 to-yellow-200">
+              <i class="fas fa-clock text-yellow-600"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900">Timeline & Finance</h3>
           </div>
-          <h3 class="text-2xl font-bold text-gray-900">Timeline & Finance</h3>
+          <div class="space-y-4">
+            <div v-if="property.daysToComplete" class="flex justify-between items-center p-4 rounded-xl bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500">
+              <span class="text-blue-700 font-semibold flex items-center space-x-2">
+                <i class="fas fa-calendar-day text-lg"></i>
+                <span>Current Length:</span>
+              </span>
+              <span class="font-bold text-blue-900 text-lg">{{ property.daysToComplete }} days</span>
+            </div>
+            <div v-if="property.estimatedDaysToComplete" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+              <span class="text-gray-600 font-medium">Est. Days to Complete:</span>
+              <span class="font-bold text-gray-900">{{ property.estimatedDaysToComplete }} days</span>
+            </div>
+            <div v-if="property.financialInstitution" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+              <span class="text-gray-600 font-medium">Financial Institution:</span>
+              <span class="font-bold text-gray-900">{{ property.financialInstitution }}</span>
+            </div>
+          </div>
         </div>
-        <div class="space-y-4">
-          <div v-if="property.daysToComplete" class="flex justify-between items-center p-4 rounded-xl bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500">
-            <span class="text-blue-700 font-semibold flex items-center space-x-2">
-              <i class="fas fa-calendar-day text-lg"></i>
-              <span>Current Length:</span>
-            </span>
-            <span class="font-bold text-blue-900 text-lg">{{ property.daysToComplete }} days</span>
+        <div class="glass-effect rounded-2xl p-8 shadow-lg">
+          <div class="flex items-center space-x-3 mb-6">
+            <div class="p-3 rounded-xl bg-gradient-to-br from-pink-100 to-pink-200">
+              <i class="fas fa-comment-dots text-pink-600"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900">Latest Updates</h3>
           </div>
-          <div v-if="property.estimatedDaysToComplete" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
-            <span class="text-gray-600 font-medium">Est. Days to Complete:</span>
-            <span class="font-bold text-gray-900">{{ property.estimatedDaysToComplete }} days</span>
-          </div>
-          <div v-if="property.financialInstitution" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
-            <span class="text-gray-600 font-medium">Financial Institution:</span>
-            <span class="font-bold text-gray-900">{{ property.financialInstitution }}</span>
+          <div class="space-y-4">
+            <div v-if="property.latestUpdates" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+              <span class="text-gray-600 font-medium">Comments:</span>
+              <span class="font-bold text-gray-900">{{ property.latestUpdates }}</span>
+            </div>
+            <div v-if="property.dateCommentsAdded" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
+              <span class="text-gray-600 font-medium">Date Comments Added:</span>
+              <span class="font-bold text-gray-900">{{ property.dateCommentsAdded }}</span>
+            </div>
           </div>
         </div>
       </div>
