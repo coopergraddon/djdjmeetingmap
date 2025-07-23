@@ -55,6 +55,8 @@ export default defineEventHandler(async (event) => {
             case 'windows ordered': property.windowsOrdered = value; break;
             case 'days from start to finish': property.daysFromStartToFinish = value; break;
             case 'financial institution': property.financialInstitution = value; break;
+            case 'latest updates': property.latestUpdates = value; break;
+            case 'date comments added': property.dateCommentsAdded = value; break;
             default: property[header] = value;
           }
         });
