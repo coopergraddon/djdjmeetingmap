@@ -52,6 +52,7 @@ body {
 .phase-pending { background: linear-gradient(135deg, #0891B2, #06B6D4); color: white; }
 .phase-delete { background: linear-gradient(135deg, #DC2626, #EF4444); color: white; }
 .phase-unknown { background: linear-gradient(135deg, #9CA3AF, #D1D5DB); color: white; }
+.phase-groundwork { background: linear-gradient(135deg, #8B5C2D, #A0522D); color: white; }
 
 .stats-card {
     background: rgba(255, 255, 255, 0.95);
