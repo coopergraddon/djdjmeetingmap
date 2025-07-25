@@ -16,7 +16,7 @@
         <div class="flex flex-col items-end space-y-2">
           <span :class="['px-3 py-2 text-sm font-semibold rounded-xl flex items-center space-x-2', getPhaseColor(property.phase)]">
             <i :class="getPhaseIcon(property.phase)"></i>
-            <span>{{ property.phase }}</span>
+            <span>{{ displayPhase(property.phase) }}</span>
           </span>
         </div>
       </div>
@@ -66,6 +66,7 @@
 
 <script setup>
 import { useProperties } from '~/composables/useProperties';
+import { displayPhase } from '~/composables/useProperties';
 
 const props = defineProps({
   property: {

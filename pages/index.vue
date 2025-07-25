@@ -181,7 +181,7 @@
               <select v-model="selectedPhase" class="pl-12 pr-8 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 bg-white/80 min-w-[200px]">
                 <option value="">All Phases</option>
                 <option value="Sheetrock">Sheetrock</option>
-                <option value="Flatwork">Flatwork</option>
+                <option value="Flatwork">Groundwork</option>
                 <option value="Roof">Roof</option>
                 <option value="Final">Final</option>
                 <option value="Design">Design</option>
@@ -292,7 +292,7 @@ const initializePhaseChart = () => {
         data: Object.values(phaseCounts),
         backgroundColor: [
           '#8B5CF6', // Purple - Sheetrock
-          '#374151', // Dark Gray - Flatwork  
+          '#374151', // Dark Gray - Groundwork  
           '#0F766E', // Teal - Roof
           '#059669', // Green - Final
           '#2563EB', // Blue - Design

@@ -24,7 +24,7 @@
           </div>
           <div v-if="property.phase" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
             <span class="text-gray-600 font-medium">Phase:</span>
-            <span :class="['px-3 py-1 text-sm font-semibold rounded-lg', getPhaseColor(property.phase)]">{{ property.phase }}</span>
+            <span :class="['px-3 py-1 text-sm font-semibold rounded-lg', getPhaseColor(property.phase)]">{{ displayPhase(property.phase) }}</span>
           </div>
           <div v-if="property.type" class="flex justify-between items-center p-3 rounded-lg bg-gray-50">
             <span class="text-gray-600 font-medium">Property Type:</span>
@@ -208,6 +208,7 @@
 <script setup>
 import { useProperties } from '~/composables/useProperties';
 import { computed } from 'vue';
+import { displayPhase } from '~/composables/useProperties';
 
 const props = defineProps({
   property: {

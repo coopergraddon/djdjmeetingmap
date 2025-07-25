@@ -1,5 +1,10 @@
 import { ref, watch, readonly } from '#imports';
 
+// Utility to display 'Groundwork' instead of 'Flatwork'
+export function displayPhase(phase: string): string {
+  return phase === 'Flatwork' ? 'Groundwork' : phase;
+}
+
 export interface Property {
   id: string;
   address: string;
@@ -50,7 +55,7 @@ export const useProperties = () => {
   const getPhaseColor = (phase: string) => {
     const colors: Record<string, string> = {
       'Sheetrock': 'phase-sheetrock',
-      'Flatwork': 'phase-flatwork',
+      'Flatwork': 'phase-groundwork', // display as Groundwork
       'Roof': 'phase-roof',
       'Final': 'phase-final',
       'Design': 'phase-design',
@@ -68,7 +73,7 @@ export const useProperties = () => {
   const getPhaseIcon = (phase: string) => {
     const icons: Record<string, string> = {
       'Sheetrock': 'fas fa-paint-roller',
-      'Flatwork': 'fas fa-hammer',
+      'Flatwork': 'fas fa-hammer', // display as Groundwork
       'Roof': 'fas fa-home',
       'Final': 'fas fa-check-circle',
       'Design': 'fas fa-drafting-compass',
