@@ -80,6 +80,30 @@ export default defineEventHandler(async (event) => {
     // Filter out properties in the 'Delete' phase
     properties = properties.filter(p => p.phase?.toLowerCase() !== 'delete');
 
+    // Deduplicate and merge properties by APN (or address if APN is missing)
+    const mergedMap = new Map();
+    for (const prop of properties) {
+      const key = prop.apn || prop.address?.toLowerCase();
+      if (!key) continue;
+      if (!mergedMap.has(key)) {
+        mergedMap.set(key, { ...prop });
+      } else {
+        const existing = mergedMap.get(key);
+        // Merge fields, preferring non-empty values
+        for (const field of [
+          'financialInstitution', 'pm', 'pmName', 'pmPhone', 'pmEmail',
+          'address', 'apn', 'city', 'lot', 'sqft', 'client', 'phase', 'draw', 'notes',
+          'permitSubmitted', 'permitIssued', 'startDate', 'deadline', 'certOfOcc', 'completed',
+          'daysSinceStart', 'daysSinceSubmital', 'windowsOrdered', 'daysFromStartToFinish',
+          'latestUpdates', 'dateCommentsAdded', 'project', 'style', 'category', 'type', 'id']) {
+          if ((!existing[field] || existing[field] === '') && prop[field]) {
+            existing[field] = prop[field];
+          }
+        }
+      }
+    }
+    properties = Array.from(mergedMap.values());
+
     return {
       success: true,
       properties,
