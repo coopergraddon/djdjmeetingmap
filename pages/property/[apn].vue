@@ -69,79 +69,32 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useProperties } from '~/composables/useProperties';
 import PropertyDetail from '~/components/PropertyDetail.vue';
 
 const route = useRoute();
 const router = useRouter();
-const { showAllProperties, showPropertiesByCategory, showPortfolioOverview, searchTerm, searchField, selectedPhase, completionFrom, completionTo, filterProperties, currentView } = useProperties();
 const isLoading = ref(true);
 const error = ref(null);
 const property = ref(null);
 
 const goToDashboard = () => {
-  showPortfolioOverview();
   router.push('/');
 };
 const goToAllProperties = () => {
-  showAllProperties();
   router.push('/?view=list');
 };
 const goToConstruction = () => {
-  showPropertiesByCategory('Construction');
   router.push('/?view=list');
 };
 const goToCompleted = () => {
-  showPropertiesByCategory('Completed', ['Listed', 'Sold', 'Pending']);
   router.push('/?view=list');
 };
 
 const goBackToSearch = () => {
   console.log('goBackToSearch called');
   
-  // Restore search/filter state from sessionStorage if available
-  const cached = sessionStorage.getItem('propertySearchState');
-  console.log('Cached state from sessionStorage:', cached);
-  
-  if (cached) {
-    try {
-      const state = JSON.parse(cached);
-      console.log('Parsed state:', state);
-      
-      // Apply the cached state
-      searchTerm.value = state.searchTerm || '';
-      searchField.value = state.searchField || 'all';
-      selectedPhase.value = state.selectedPhase || '';
-      completionFrom.value = state.completionFrom || '';
-      completionTo.value = state.completionTo || '';
-      
-      console.log('Applied state values:', {
-        searchTerm: searchTerm.value,
-        searchField: searchField.value,
-        selectedPhase: selectedPhase.value,
-        completionFrom: completionFrom.value,
-        completionTo: completionTo.value
-      });
-      
-      // Set the view to list and apply filters
-      currentView.value = 'list';
-      filterProperties();
-      
-      console.log('About to navigate to /?view=list');
-      
-      // Try using router.replace instead of push
-      router.replace('/?view=list');
-      return;
-    } catch (e) {
-      console.error('Error restoring search state:', e);
-      // fallback to all properties
-    }
-  } else {
-    console.log('No cached state found, showing all properties');
-  }
-  
-  // If no cached state or error, show all properties
-  showAllProperties();
+  // Simply navigate back to the list view
+  // The main page will handle restoring the search state from sessionStorage
   router.replace('/?view=list');
 };
 

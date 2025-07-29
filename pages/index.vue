@@ -446,7 +446,7 @@ onMounted(async () => {
   if (route.query.view === 'list') {
     console.log('Setting view to list from query parameter');
     currentView.value = 'list';
-   
+    
     // Restore search state immediately after setting view
     const cached = sessionStorage.getItem('propertySearchState');
     if (cached) {
@@ -458,6 +458,8 @@ onMounted(async () => {
         selectedPhase.value = state.selectedPhase || '';
         completionFrom.value = state.completionFrom || '';
         completionTo.value = state.completionTo || '';
+        // Apply filters after restoring state
+        await nextTick();
         filterProperties();
       } catch (e) {
         console.error('Error restoring search state on mount:', e);
