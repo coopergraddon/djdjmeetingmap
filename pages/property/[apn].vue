@@ -97,12 +97,16 @@ const goToCompleted = () => {
 };
 
 const goBackToSearch = () => {
+  console.log('goBackToSearch called');
+  
   // Restore search/filter state from sessionStorage if available
   const cached = sessionStorage.getItem('propertySearchState');
+  console.log('Cached state from sessionStorage:', cached);
+  
   if (cached) {
     try {
       const state = JSON.parse(cached);
-      console.log('Restoring search state:', state);
+      console.log('Parsed state:', state);
       
       // Apply the cached state
       searchTerm.value = state.searchTerm || '';
@@ -111,29 +115,34 @@ const goBackToSearch = () => {
       completionFrom.value = state.completionFrom || '';
       completionTo.value = state.completionTo || '';
       
+      console.log('Applied state values:', {
+        searchTerm: searchTerm.value,
+        searchField: searchField.value,
+        selectedPhase: selectedPhase.value,
+        completionFrom: completionFrom.value,
+        completionTo: completionTo.value
+      });
+      
       // Set the view to list and apply filters
       currentView.value = 'list';
       filterProperties();
       
-      // Add a small delay to ensure state is applied before navigation
-      setTimeout(() => {
-        console.log('Navigating to list view with state:', {
-          searchTerm: searchTerm.value,
-          searchField: searchField.value,
-          selectedPhase: selectedPhase.value,
-          currentView: currentView.value
-        });
-        router.push('/?view=list');
-      }, 100);
+      console.log('About to navigate to /?view=list');
+      
+      // Try using router.replace instead of push
+      router.replace('/?view=list');
       return;
     } catch (e) {
       console.error('Error restoring search state:', e);
       // fallback to all properties
     }
+  } else {
+    console.log('No cached state found, showing all properties');
   }
+  
   // If no cached state or error, show all properties
   showAllProperties();
-  router.push('/?view=list');
+  router.replace('/?view=list');
 };
 
 onMounted(async () => {

@@ -452,7 +452,34 @@ watch(() => route.query.view, (newView) => {
   if (newView === 'list') {
     console.log('Setting view to list from route change');
     currentView.value = 'list';
+   
+    // Try to restore search state when view changes to list
+    const cached = sessionStorage.getItem('propertySearchState');
+    if (cached) {
+      try {
+        const state = JSON.parse(cached);
+        console.log('Restoring search state from route change:', state);
+        searchTerm.value = state.searchTerm || '';
+        searchField.value = state.searchField || 'all';
+        selectedPhase.value = state.selectedPhase || '';
+        completionFrom.value = state.completionFrom || '';
+        completionTo.value = state.completionTo || '';
+        filterProperties();
+      } catch (e) {
+        console.error('Error restoring search state from route change:', e);
+      }
+    }
   }
+});
+
+// Watch for currentView changes
+watch(() => currentView.value, (newView) => {
+  console.log('currentView changed to:', newView);
+});
+
+// Watch for search term changes
+watch(() => searchTerm.value, (newTerm) => {
+  console.log('searchTerm changed to:', newTerm);
 });
 
 onUnmounted(() => {
