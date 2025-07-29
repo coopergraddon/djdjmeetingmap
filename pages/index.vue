@@ -438,14 +438,32 @@ onMounted(async () => {
   await nextTick();
   
   console.log('Page mounted, route query:', route.query);
+  
+  // Fetch initial data first
+  await fetchProperties();
+  
   // Check for view query parameter
   if (route.query.view === 'list') {
     console.log('Setting view to list from query parameter');
     currentView.value = 'list';
+   
+    // Restore search state immediately after setting view
+    const cached = sessionStorage.getItem('propertySearchState');
+    if (cached) {
+      try {
+        const state = JSON.parse(cached);
+        console.log('Restoring search state on mount:', state);
+        searchTerm.value = state.searchTerm || '';
+        searchField.value = state.searchField || 'all';
+        selectedPhase.value = state.selectedPhase || '';
+        completionFrom.value = state.completionFrom || '';
+        completionTo.value = state.completionTo || '';
+        filterProperties();
+      } catch (e) {
+        console.error('Error restoring search state on mount:', e);
+      }
+    }
   }
-  
-  // Fetch initial data
-  await fetchProperties();
   
   // Initialize chart after data is loaded
   initializePhaseChart();
