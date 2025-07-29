@@ -1120,16 +1120,16 @@ __uECFbb2YNEBQHWUf8iZbQklmqHW4r2hsfgkdsgag
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"18dcd-LkRrTKSYIpJhUetTpJQO+0Xt9rI\"",
-    "mtime": "2025-07-29T21:11:42.213Z",
-    "size": 101837,
+    "etag": "\"18e43-bj1ryzeh3hXLTm3d7ordNIFYqII\"",
+    "mtime": "2025-07-29T21:12:17.433Z",
+    "size": 101955,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"5ea5a-U++E8qWbtKCUYBu9bc+yl0jnvpM\"",
-    "mtime": "2025-07-29T21:11:42.213Z",
-    "size": 387674,
+    "etag": "\"5ec3b-xlqQQEnFeUP7csRoQNSKbmiD/+Y\"",
+    "mtime": "2025-07-29T21:12:17.433Z",
+    "size": 388155,
     "path": "index.mjs.map"
   }
 };
@@ -2140,6 +2140,55 @@ const mlsProperties_get = defineEventHandler(async (event) => {
           view: mlsProperty.View,
           waterfrontYN: mlsProperty.WaterfrontYN,
           zoningDescription: mlsProperty.ZoningDescription
+        },
+        // Enhanced MLS display fields for professional presentation
+        mlsDisplay: {
+          // Property Media
+          photos: mlsProperty.Media || [],
+          photosCount: mlsProperty.PhotosCount || 0,
+          // Property Description
+          publicRemarks: mlsProperty.PublicRemarks || "",
+          privateRemarks: mlsProperty.PrivateRemarks || "",
+          // Agent Information
+          listAgentName: mlsProperty.ListAgentFullName || "",
+          listAgentPhone: mlsProperty.ListAgentOfficePhone || "",
+          listAgentMlsId: mlsProperty.ListAgentMlsId || "",
+          // Office Information
+          listOfficeName: mlsProperty.ListOfficeName || "",
+          listOfficePhone: mlsProperty.ListOfficePhone || "",
+          listOfficeMlsId: mlsProperty.ListOfficeMlsId || "",
+          // School Information
+          elementarySchool: mlsProperty.ElementarySchool || "",
+          middleSchool: mlsProperty.MiddleOrJuniorSchool || "",
+          highSchool: mlsProperty.HighSchool || "",
+          highSchoolDistrict: mlsProperty.HighSchoolDistrict || "",
+          // Property Details
+          yearBuilt: mlsProperty.YearBuilt || "",
+          architecturalStyle: mlsProperty.ArchitecturalStyle || [],
+          exteriorFeatures: mlsProperty.ExteriorFeatures || [],
+          interiorFeatures: mlsProperty.InteriorFeatures || [],
+          lotFeatures: mlsProperty.LotFeatures || [],
+          appliances: mlsProperty.Appliances || [],
+          heating: mlsProperty.Heating || [],
+          cooling: mlsProperty.Cooling || [],
+          parking: mlsProperty.ParkingFeatures || [],
+          // Property Status
+          daysOnMarket: mlsProperty.CumulativeDaysOnMarket || 0,
+          originalListPrice: mlsProperty.OriginalListPrice || mlsProperty.ListPrice,
+          priceChange: mlsProperty.OriginalListPrice && mlsProperty.ListPrice ? mlsProperty.OriginalListPrice - mlsProperty.ListPrice : 0,
+          // Additional Details
+          view: mlsProperty.View || [],
+          waterfrontYN: mlsProperty.WaterfrontYN || false,
+          waterfrontFeatures: mlsProperty.WaterfrontFeatures || [],
+          zoningDescription: mlsProperty.ZoningDescription || "",
+          taxAnnualAmount: mlsProperty.TaxAnnualAmount || 0,
+          taxYear: mlsProperty.TaxYear || "",
+          // Property Condition
+          propertyCondition: mlsProperty.PropertyCondition || [],
+          newConstructionYN: mlsProperty.NewConstructionYN || false,
+          // Showing Information
+          showingRequirements: mlsProperty.ShowingRequirements || [],
+          directions: mlsProperty.Directions || ""
         }
       };
     });

@@ -42,17 +42,17 @@ body {
     border-left-color: var(--primary-green);
 }
 
-.phase-sheetrock { background: linear-gradient(135deg, #8B5CF6, #A855F7); color: white; }
-.phase-flatwork { background: linear-gradient(135deg, #374151, #4B5563); color: white; }
-.phase-roof { background: linear-gradient(135deg, #0F766E, #14B8A6); color: white; }
-.phase-final { background: linear-gradient(135deg, #059669, #10B981); color: white; }
-.phase-design { background: linear-gradient(135deg, #2563EB, #3B82F6); color: white; }
-.phase-sold { background: linear-gradient(135deg, #16A34A, #22C55E); color: white; }
-.phase-listed { background: linear-gradient(135deg, #059669, #10B981); color: white; }
-.phase-pending { background: linear-gradient(135deg, #0891B2, #06B6D4); color: white; }
-.phase-delete { background: linear-gradient(135deg, #DC2626, #EF4444); color: white; }
-.phase-unknown { background: linear-gradient(135deg, #9CA3AF, #D1D5DB); color: white; }
+/* Custom phase colors */
+.phase-sheetrock { background: linear-gradient(135deg, #FF6B6B, #FF8E8E); color: white; }
 .phase-groundwork { background: linear-gradient(135deg, #8B5C2D, #A0522D); color: white; }
+.phase-roof { background: linear-gradient(135deg, #4A90E2, #5BA0F2); color: white; }
+.phase-final { background: linear-gradient(135deg, #50C878, #3CB371); color: white; }
+.phase-design { background: linear-gradient(135deg, #9B59B6, #8E44AD); color: white; }
+.phase-sold { background: linear-gradient(135deg, #F39C12, #E67E22); color: white; }
+.phase-listed { background: linear-gradient(135deg, #3498DB, #2980B9); color: white; }
+.phase-pending { background: linear-gradient(135deg, #E74C3C, #C0392B); color: white; }
+.phase-delete { background: linear-gradient(135deg, #95A5A6, #7F8C8D); color: white; }
+.phase-unknown { background: linear-gradient(135deg, #34495E, #2C3E50); color: white; }
 
 .stats-card {
     background: rgba(255, 255, 255, 0.95);
@@ -60,14 +60,15 @@ body {
     border: 1px solid rgba(30, 77, 75, 0.1);
 }
 
+/* Button styles */
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(30, 77, 75, 0.2);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
 }
 
 .nav-link {
@@ -95,22 +96,73 @@ body {
     width: 100%;
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Animations */
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
 }
 
-.animate-fade-in {
-    animation: fadeInUp 0.6s ease-out;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .hero-pattern {
     background-image: radial-gradient(circle at 1px 1px, rgba(30, 77, 75, 0.1) 1px, transparent 0);
     background-size: 20px 20px;
+}
+
+/* MLS Display Enhancements */
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* MLS Photo gallery styling */
+.mls-photo-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.mls-photo-overlay {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Agent information styling */
+.agent-info {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-left: 3px solid #3b82f6;
+}
+
+/* Property features styling */
+.property-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.feature-tag {
+    background: #e0e7ff;
+    color: #3730a3;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
 } 

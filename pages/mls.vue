@@ -100,6 +100,29 @@
                   Score: {{ property.score }}
                 </span>
               </div>
+             
+              <!-- Property Photos (if available) -->
+              <div v-if="property.mlsDisplay?.photos?.length > 0" class="mb-3">
+                <div class="relative h-32 bg-gray-100 rounded-lg overflow-hidden">
+                  <img 
+                    :src="property.mlsDisplay.photos[0]" 
+                    :alt="property.address"
+                    class="w-full h-full object-cover"
+                    @error="$event.target.style.display='none'"
+                  />
+                  <div v-if="property.mlsDisplay.photosCount > 1" class="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+                    +{{ property.mlsDisplay.photosCount - 1 }} more
+                  </div>
+                </div>
+              </div>
+             
+              <!-- Property Description Preview -->
+              <div v-if="property.mlsDisplay?.publicRemarks" class="mb-3">
+                <p class="text-sm text-gray-700 line-clamp-3">
+                  {{ property.mlsDisplay.publicRemarks.substring(0, 150) }}{{ property.mlsDisplay.publicRemarks.length > 150 ? '...' : '' }}
+                </p>
+              </div>
+             
               <div class="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-3">
                 <div>
                   <span class="font-medium">Price:</span> ${{ property.price.toLocaleString() }}
@@ -119,12 +142,27 @@
                 <div>
                   <span class="font-medium">Property Type:</span> {{ property.propertySubType || property.propertyType }}
                 </div>
+                <div v-if="property.mlsDisplay?.yearBuilt">
+                  <span class="font-medium">Year Built:</span> {{ property.mlsDisplay.yearBuilt }}
+                </div>
+                <div v-if="property.mlsDisplay?.daysOnMarket">
+                  <span class="font-medium">Days on Market:</span> {{ property.mlsDisplay.daysOnMarket }}
+                </div>
               </div>
+             
+              <!-- Agent Information -->
+              <div v-if="property.mlsDisplay?.listAgentName" class="mb-3 p-2 bg-gray-50 rounded text-xs">
+                <div class="font-medium text-gray-800">Listed by:</div>
+                <div class="text-gray-600">{{ property.mlsDisplay.listAgentName }}</div>
+                <div v-if="property.mlsDisplay.listOfficeName" class="text-gray-500">{{ property.mlsDisplay.listOfficeName }}</div>
+              </div>
+             
               <div class="text-xs text-gray-500">
                 <div>Zoning: {{ property.zoning }}</div>
                 <div>Proximity: {{ property.proximity }} miles</div>
                 <div v-if="property.listingDate">Listed: {{ new Date(property.listingDate).toLocaleDateString() }}</div>
                 <div>MLS ID: {{ property.mlsId }}</div>
+                <div v-if="property.mlsDisplay?.highSchoolDistrict">School District: {{ property.mlsDisplay.highSchoolDistrict }}</div>
               </div>
             </div>
           </div>
@@ -144,6 +182,29 @@
                   Score: {{ property.score }}
                 </span>
               </div>
+             
+              <!-- Property Photos (if available) -->
+              <div v-if="property.mlsDisplay?.photos?.length > 0" class="mb-3">
+                <div class="relative h-32 bg-gray-100 rounded-lg overflow-hidden">
+                  <img 
+                    :src="property.mlsDisplay.photos[0]" 
+                    :alt="property.address"
+                    class="w-full h-full object-cover"
+                    @error="$event.target.style.display='none'"
+                  />
+                  <div v-if="property.mlsDisplay.photosCount > 1" class="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+                    +{{ property.mlsDisplay.photosCount - 1 }} more
+                  </div>
+                </div>
+              </div>
+             
+              <!-- Property Description Preview -->
+              <div v-if="property.mlsDisplay?.publicRemarks" class="mb-3">
+                <p class="text-sm text-gray-700 line-clamp-3">
+                  {{ property.mlsDisplay.publicRemarks.substring(0, 150) }}{{ property.mlsDisplay.publicRemarks.length > 150 ? '...' : '' }}
+                </p>
+              </div>
+             
               <div class="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-3">
                 <div>
                   <span class="font-medium">Price:</span> ${{ property.price.toLocaleString() }}
@@ -163,12 +224,27 @@
                 <div>
                   <span class="font-medium">Property Type:</span> {{ property.propertySubType || property.propertyType }}
                 </div>
+                <div v-if="property.mlsDisplay?.yearBuilt">
+                  <span class="font-medium">Year Built:</span> {{ property.mlsDisplay.yearBuilt }}
+                </div>
+                <div v-if="property.mlsDisplay?.daysOnMarket">
+                  <span class="font-medium">Days on Market:</span> {{ property.mlsDisplay.daysOnMarket }}
+                </div>
               </div>
+             
+              <!-- Agent Information -->
+              <div v-if="property.mlsDisplay?.listAgentName" class="mb-3 p-2 bg-gray-50 rounded text-xs">
+                <div class="font-medium text-gray-800">Listed by:</div>
+                <div class="text-gray-600">{{ property.mlsDisplay.listAgentName }}</div>
+                <div v-if="property.mlsDisplay.listOfficeName" class="text-gray-500">{{ property.mlsDisplay.listOfficeName }}</div>
+              </div>
+             
               <div class="text-xs text-gray-500">
                 <div>Zoning: {{ property.zoning }}</div>
                 <div>Proximity: {{ property.proximity }} miles</div>
                 <div v-if="property.listingDate">Listed: {{ new Date(property.listingDate).toLocaleDateString() }}</div>
                 <div>MLS ID: {{ property.mlsId }}</div>
+                <div v-if="property.mlsDisplay?.highSchoolDistrict">School District: {{ property.mlsDisplay.highSchoolDistrict }}</div>
               </div>
             </div>
           </div>
