@@ -102,6 +102,8 @@ const goBackToSearch = () => {
   if (cached) {
     try {
       const state = JSON.parse(cached);
+      console.log('Restoring search state:', state);
+      
       // Apply the cached state
       searchTerm.value = state.searchTerm || '';
       searchField.value = state.searchField || 'all';
@@ -113,8 +115,16 @@ const goBackToSearch = () => {
       currentView.value = 'list';
       filterProperties();
       
-      // Navigate back to the list view
-      router.push('/?view=list');
+      // Add a small delay to ensure state is applied before navigation
+      setTimeout(() => {
+        console.log('Navigating to list view with state:', {
+          searchTerm: searchTerm.value,
+          searchField: searchField.value,
+          selectedPhase: selectedPhase.value,
+          currentView: currentView.value
+        });
+        router.push('/?view=list');
+      }, 100);
       return;
     } catch (e) {
       console.error('Error restoring search state:', e);

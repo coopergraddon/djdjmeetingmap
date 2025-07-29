@@ -224,10 +224,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, computed } from 'vue';
+import { ref, onMounted, nextTick, computed, watch } from 'vue';
 import { useProperties } from '~/composables/useProperties';
 import PropertyCard from '~/components/PropertyCard.vue';
 // CsvUploader import removed
+
+const route = useRoute();
 
 const {
   allProperties,
@@ -428,7 +430,6 @@ onMounted(async () => {
   await nextTick();
   
   // Check for view query parameter
-  const route = useRoute();
   if (route.query.view === 'list') {
     currentView.value = 'list';
   }
@@ -441,6 +442,13 @@ onMounted(async () => {
   
   // Start auto-refresh
   startAutoRefresh();
+});
+
+// Watch for route changes to handle navigation back from property details
+watch(() => route.query.view, (newView) => {
+  if (newView === 'list') {
+    currentView.value = 'list';
+  }
 });
 
 onUnmounted(() => {
