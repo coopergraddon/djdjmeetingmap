@@ -403,6 +403,8 @@ function scrollToList() {
 
 const triggerSearch = () => {
   filterProperties();
+  // Cache the current search state after performing a search
+  cacheCurrentSearchState();
 };
 
 const resetFilters = () => {
@@ -414,8 +416,8 @@ const resetFilters = () => {
   showAllProperties();
 };
 
-// Cache search/filter state before navigating to property details
-function cacheSearchState() {
+// Function to cache the current search state
+const cacheCurrentSearchState = () => {
   const state = {
     searchTerm: searchTerm.value,
     searchField: searchField.value,
@@ -423,7 +425,13 @@ function cacheSearchState() {
     completionFrom: completionFrom.value,
     completionTo: completionTo.value
   };
+  console.log('Caching current search state:', state);
   sessionStorage.setItem('propertySearchState', JSON.stringify(state));
+};
+
+// Cache search/filter state before navigating to property details
+function cacheSearchState() {
+  cacheCurrentSearchState();
 }
 
 onMounted(async () => {
@@ -480,6 +488,39 @@ watch(() => currentView.value, (newView) => {
 // Watch for search term changes
 watch(() => searchTerm.value, (newTerm) => {
   console.log('searchTerm changed to:', newTerm);
+  // Cache state when search term changes
+  if (currentView.value === 'list') {
+    cacheCurrentSearchState();
+  }
+});
+
+// Watch for other search parameters
+watch(() => selectedPhase.value, (newPhase) => {
+  console.log('selectedPhase changed to:', newPhase);
+  if (currentView.value === 'list') {
+    cacheCurrentSearchState();
+  }
+});
+
+watch(() => searchField.value, (newField) => {
+  console.log('searchField changed to:', newField);
+  if (currentView.value === 'list') {
+    cacheCurrentSearchState();
+  }
+});
+
+watch(() => completionFrom.value, (newFrom) => {
+  console.log('completionFrom changed to:', newFrom);
+  if (currentView.value === 'list') {
+    cacheCurrentSearchState();
+  }
+});
+
+watch(() => completionTo.value, (newTo) => {
+  console.log('completionTo changed to:', newTo);
+  if (currentView.value === 'list') {
+    cacheCurrentSearchState();
+  }
 });
 
 onUnmounted(() => {
