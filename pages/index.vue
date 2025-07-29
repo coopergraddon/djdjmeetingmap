@@ -427,6 +427,12 @@ function cacheSearchState() {
 onMounted(async () => {
   await nextTick();
   
+  // Check for view query parameter
+  const route = useRoute();
+  if (route.query.view === 'list') {
+    currentView.value = 'list';
+  }
+  
   // Fetch initial data
   await fetchProperties();
   

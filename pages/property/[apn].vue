@@ -102,19 +102,26 @@ const goBackToSearch = () => {
   if (cached) {
     try {
       const state = JSON.parse(cached);
+      // Apply the cached state
       searchTerm.value = state.searchTerm || '';
       searchField.value = state.searchField || 'all';
       selectedPhase.value = state.selectedPhase || '';
       completionFrom.value = state.completionFrom || '';
       completionTo.value = state.completionTo || '';
-      filterProperties();
+      
+      // Set the view to list and apply filters
       currentView.value = 'list';
+      filterProperties();
+      
+      // Navigate back to the list view
       router.push('/?view=list');
       return;
     } catch (e) {
+      console.error('Error restoring search state:', e);
       // fallback to all properties
     }
   }
+  // If no cached state or error, show all properties
   showAllProperties();
   router.push('/?view=list');
 };
