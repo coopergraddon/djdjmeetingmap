@@ -170,9 +170,18 @@ export default defineEventHandler(async (event) => {
     // Score the properties
     const scoredProperties = scoreMLSProperties(properties);
 
+    // Remove sensitive scoring breakdown from client response
+    const clientSafeProperties = scoredProperties.map(property => {
+      const { scoreBreakdown, ...clientSafeProperty } = property;
+      return {
+        ...clientSafeProperty,
+        score: property.score // Keep only the final score
+      };
+    });
+
     return {
       success: true,
-      properties: scoredProperties,
+      properties: clientSafeProperties,
       total: scoredProperties.length,
       lastUpdated: new Date().toISOString()
     };

@@ -15,6 +15,9 @@ declare module "nitropack/types" {
     '/api/mls-score': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/mls-score').default>>>>
     }
+    '/api/mls-scoring-analysis': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/mls-scoring-analysis.get').default>>>>
+    }
     '/api/properties': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/properties.get').default>>>>
     }

@@ -1,5 +1,5 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, createError, getQuery as getQuery$1, readBody, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, setCookie, readFormData, getResponseStatusText } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/h3/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, createError, getQuery as getQuery$1, readBody, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, setCookie, getHeader, readFormData, getResponseStatusText } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/h3/dist/index.mjs';
 import { Server } from 'node:http';
 import { resolve, dirname, join } from 'node:path';
 import nodeCrypto from 'node:crypto';
@@ -1120,16 +1120,16 @@ __uECFbb2YNEBQHWUf8iZbQklmqHW4r2hsfgkdsgag
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"18e43-bj1ryzeh3hXLTm3d7ordNIFYqII\"",
-    "mtime": "2025-07-29T21:12:17.433Z",
-    "size": 101955,
+    "etag": "\"1a9fb-BprZDBJFK6v7WhoVIHvMn7oFAjY\"",
+    "mtime": "2025-07-29T22:43:59.173Z",
+    "size": 109051,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"5ec3b-xlqQQEnFeUP7csRoQNSKbmiD/+Y\"",
-    "mtime": "2025-07-29T21:12:17.433Z",
-    "size": 388155,
+    "etag": "\"655d2-doxG0RlgjukzmoDm7gOI2ywo9/w\"",
+    "mtime": "2025-07-29T22:43:59.173Z",
+    "size": 415186,
     "path": "index.mjs.map"
   }
 };
@@ -1543,6 +1543,7 @@ const _lazy_LBrAiR = () => Promise.resolve().then(function () { return login_pos
 const _lazy_DOkZZ1 = () => Promise.resolve().then(function () { return mlsExplorer_get$1; });
 const _lazy_WtdEqw = () => Promise.resolve().then(function () { return mlsProperties_get$1; });
 const _lazy__6i3pz = () => Promise.resolve().then(function () { return mlsScore; });
+const _lazy_K23Jzf = () => Promise.resolve().then(function () { return mlsScoringAnalysis_get$1; });
 const _lazy_LITOQ3 = () => Promise.resolve().then(function () { return properties_get$1; });
 const _lazy_nvWSAx = () => Promise.resolve().then(function () { return uploadCsv_post$1; });
 const _lazy_hhrUI6 = () => Promise.resolve().then(function () { return renderer$1; });
@@ -1553,6 +1554,7 @@ const handlers = [
   { route: '/api/mls-explorer', handler: _lazy_DOkZZ1, lazy: true, middleware: false, method: "get" },
   { route: '/api/mls-properties', handler: _lazy_WtdEqw, lazy: true, middleware: false, method: "get" },
   { route: '/api/mls-score', handler: _lazy__6i3pz, lazy: true, middleware: false, method: undefined },
+  { route: '/api/mls-scoring-analysis', handler: _lazy_K23Jzf, lazy: true, middleware: false, method: "get" },
   { route: '/api/properties', handler: _lazy_LITOQ3, lazy: true, middleware: false, method: "get" },
   { route: '/api/upload-csv', handler: _lazy_nvWSAx, lazy: true, middleware: false, method: "post" },
   { route: '/__nuxt_error', handler: _lazy_hhrUI6, lazy: true, middleware: false, method: undefined },
@@ -2193,9 +2195,17 @@ const mlsProperties_get = defineEventHandler(async (event) => {
       };
     });
     const scoredProperties = scoreMLSProperties(properties);
+    const clientSafeProperties = scoredProperties.map((property) => {
+      const { scoreBreakdown, ...clientSafeProperty } = property;
+      return {
+        ...clientSafeProperty,
+        score: property.score
+        // Keep only the final score
+      };
+    });
     return {
       success: true,
-      properties: scoredProperties,
+      properties: clientSafeProperties,
       total: scoredProperties.length,
       lastUpdated: (/* @__PURE__ */ new Date()).toISOString()
     };
@@ -2214,6 +2224,110 @@ const mlsProperties_get = defineEventHandler(async (event) => {
 const mlsProperties_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: mlsProperties_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const mlsScoringAnalysis_get = defineEventHandler(async (event) => {
+  const userAgent = getHeader(event, "user-agent") || "";
+  getHeader(event, "referer") || "";
+  if (userAgent.includes("Mozilla") || userAgent.includes("Chrome") || userAgent.includes("Safari") || userAgent.includes("Firefox")) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: "Forbidden",
+      data: {
+        message: "This endpoint is for internal use only"
+      }
+    });
+  }
+  try {
+    const API_KEY = "3283b3d126616f16424f1f1f0bc722e66e1af416";
+    const API_URL = "https://api-demo.mlsgrid.com/v2";
+    const response = await $fetch(`${API_URL}/Property`, {
+      headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "Api-Version": "2.0",
+        "Content-Type": "application/json",
+        "Accept-Encoding": "gzip"
+      },
+      params: {
+        $top: 50
+      }
+    });
+    const residentialProperties = response.value.filter(
+      (prop) => prop.PropertyType === "Residential" && prop.BedroomsTotal > 0 && prop.LivingArea > 0
+    );
+    const properties = residentialProperties.map((mlsProperty) => {
+      var _a;
+      const bellinghamLat = 48.7519;
+      const bellinghamLng = -122.4787;
+      const propertyLat = mlsProperty.Latitude || 0;
+      const propertyLng = mlsProperty.Longitude || 0;
+      const proximity = propertyLat && propertyLng ? Math.sqrt(Math.pow(propertyLat - bellinghamLat, 2) + Math.pow(propertyLng - bellinghamLng, 2)) * 69 : 5;
+      const utilities = mlsProperty.Utilities || [];
+      const utilitiesStubbed = utilities.some(
+        (util) => util.toLowerCase().includes("electric") || util.toLowerCase().includes("water") || util.toLowerCase().includes("septic")
+      );
+      const address = mlsProperty.UnparsedAddress || ((_a = mlsProperty.PropertyAddress) == null ? void 0 : _a.OneLine) || `${mlsProperty.StreetNumber || ""} ${mlsProperty.StreetName || ""}, ${mlsProperty.City || ""}, ${mlsProperty.StateOrProvince || ""}`;
+      return {
+        lotSize: parseFloat(mlsProperty.LotSizeAcres) || 0,
+        bedrooms: parseInt(mlsProperty.BedroomsTotal) || 0,
+        bathrooms: parseFloat(mlsProperty.BathroomsTotalInteger) || 0,
+        price: parseFloat(mlsProperty.ListPrice) || 0,
+        utilitiesStubbed,
+        zoning: "Residential",
+        proximity,
+        address,
+        mlsId: mlsProperty.ListingKey,
+        listingDate: mlsProperty.ListingContractDate,
+        propertyType: mlsProperty.PropertyType,
+        propertySubType: mlsProperty.PropertySubType,
+        squareFootage: mlsProperty.LivingArea || 0,
+        media: mlsProperty.Media || [],
+        status: mlsProperty.StandardStatus,
+        latitude: mlsProperty.Latitude,
+        longitude: mlsProperty.Longitude
+      };
+    });
+    const scoredProperties = scoreMLSProperties(properties);
+    return {
+      success: true,
+      analysis: {
+        totalProperties: scoredProperties.length,
+        averageScore: scoredProperties.reduce((sum, p) => sum + p.score, 0) / scoredProperties.length,
+        scoreDistribution: {
+          excellent: scoredProperties.filter((p) => p.score >= 80).length,
+          good: scoredProperties.filter((p) => p.score >= 60 && p.score < 80).length,
+          fair: scoredProperties.filter((p) => p.score >= 40 && p.score < 60).length,
+          poor: scoredProperties.filter((p) => p.score < 40).length
+        },
+        topProperties: scoredProperties.sort((a, b) => b.score - a.score).slice(0, 10).map((p) => ({
+          address: p.address,
+          score: p.score,
+          scoreBreakdown: p.scoreBreakdown,
+          price: p.price,
+          lotSize: p.lotSize,
+          bedrooms: p.bedrooms,
+          bathrooms: p.bathrooms
+        }))
+      },
+      properties: scoredProperties,
+      // Full data including breakdown
+      lastUpdated: (/* @__PURE__ */ new Date()).toISOString()
+    };
+  } catch (error) {
+    console.error("Error in MLS scoring analysis:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+      analysis: null,
+      properties: [],
+      lastUpdated: (/* @__PURE__ */ new Date()).toISOString()
+    };
+  }
+});
+
+const mlsScoringAnalysis_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: mlsScoringAnalysis_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const CSV_URLS = [
