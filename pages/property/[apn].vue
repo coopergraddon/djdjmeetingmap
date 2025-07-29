@@ -122,9 +122,20 @@ const goBackToSearch = () => {
 onMounted(async () => {
   isLoading.value = true;
   try {
+    // Validate APN parameter
+    const apn = route.params.apn;
+    if (!apn || typeof apn !== 'string' || apn.trim() === '') {
+      error.value = 'Invalid APN: APN is required';
+      isLoading.value = false;
+      return;
+    }
+
     const response = await $fetch('/api/properties');
     if (response && response.properties) {
-      property.value = response.properties.find(p => p.apn === route.params.apn);
+      property.value = response.properties.find(p => p.apn === apn);
+      if (!property.value) {
+        error.value = `Property not found with APN: ${apn}`;
+      }
     }
     isLoading.value = false;
   } catch (err) {

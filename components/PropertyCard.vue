@@ -51,10 +51,24 @@
         </div>
       </div>
       <div class="flex gap-3">
-        <NuxtLink :to="`/property/${property.apn}`" class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2" @click.native="cacheSearchState">
+        <NuxtLink 
+          v-if="property.apn && property.apn.trim() !== ''" 
+          :to="`/property/${property.apn}`" 
+          class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2" 
+          @click.native="cacheSearchState"
+        >
           <i class="fas fa-info-circle"></i>
           <span>Details</span>
         </NuxtLink>
+        <button 
+          v-else 
+          disabled 
+          class="flex-1 bg-gray-400 cursor-not-allowed text-white px-4 py-3 rounded-xl font-semibold flex items-center justify-center space-x-2"
+          title="No APN available"
+        >
+          <i class="fas fa-info-circle"></i>
+          <span>No APN</span>
+        </button>
         <button @click="$emit('view-arcgis')" class="flex-1 btn-primary text-white px-4 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2">
           <i class="fas fa-map-marked-alt"></i>
           <span>Map</span>
