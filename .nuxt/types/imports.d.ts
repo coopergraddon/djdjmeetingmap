@@ -22,6 +22,7 @@ declare global {
   const definePayloadPlugin: typeof import('../../node_modules/nuxt/dist/app/nuxt')['definePayloadPlugin']
   const definePayloadReducer: typeof import('../../node_modules/nuxt/dist/app/composables/payload')['definePayloadReducer']
   const definePayloadReviver: typeof import('../../node_modules/nuxt/dist/app/composables/payload')['definePayloadReviver']
+  const displayPhase: typeof import('../../composables/useProperties')['displayPhase']
   const effect: typeof import('../../node_modules/vue')['effect']
   const effectScope: typeof import('../../node_modules/vue')['effectScope']
   const getAppManifest: typeof import('../../node_modules/nuxt/dist/app/composables/manifest')['getAppManifest']
@@ -207,6 +208,7 @@ declare module 'vue' {
     readonly definePayloadPlugin: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['definePayloadPlugin']>
     readonly definePayloadReducer: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['definePayloadReducer']>
     readonly definePayloadReviver: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['definePayloadReviver']>
+    readonly displayPhase: UnwrapRef<typeof import('../../composables/useProperties')['displayPhase']>
     readonly effect: UnwrapRef<typeof import('../../node_modules/vue')['effect']>
     readonly effectScope: UnwrapRef<typeof import('../../node_modules/vue')['effectScope']>
     readonly getAppManifest: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/manifest')['getAppManifest']>

@@ -1,11 +1,11 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, createError, getQuery as getQuery$1, readBody, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, readFormData, getResponseStatusText } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/h3/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, createError, getQuery as getQuery$1, readBody, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, setCookie, readFormData, getResponseStatusText } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/h3/dist/index.mjs';
 import { Server } from 'node:http';
 import { resolve, dirname, join } from 'node:path';
 import nodeCrypto from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
 import { escapeHtml } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/@vue/shared/dist/shared.cjs.js';
-import { createFetch, Headers as Headers$1, $fetch } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/ofetch/dist/node.mjs';
+import { createFetch, Headers as Headers$1, $fetch as $fetch$1 } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/ofetch/dist/node.mjs';
 import { promises, writeFileSync } from 'node:fs';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/coopergraddon/Downloads/djdjmeetingmap/node_modules/ufo/dist/index.mjs';
@@ -647,7 +647,8 @@ const _inlineRuntimeConfig = {
       }
     }
   },
-  "public": {}
+  "public": {},
+  "SITE_PASSWORD": "3589Lapua"
 };
 const envOptions = {
   prefix: "NITRO_",
@@ -1116,7 +1117,22 @@ const plugins = [
 __uECFbb2YNEBQHWUf8iZbQklmqHW4r2hsfgkdsgag
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"180b1-vgbatXV/MqymsfF68RwHhLVgkAM\"",
+    "mtime": "2025-07-29T20:47:33.136Z",
+    "size": 98481,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"5b507-8zl9BCGarr0bC3BHJDIF1H9p3ys\"",
+    "mtime": "2025-07-29T20:47:33.136Z",
+    "size": 374023,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -1523,12 +1539,18 @@ async function getIslandContext(event) {
   return ctx;
 }
 
+const _lazy_LBrAiR = () => Promise.resolve().then(function () { return login_post$1; });
+const _lazy_WtdEqw = () => Promise.resolve().then(function () { return mlsProperties_get$1; });
+const _lazy__6i3pz = () => Promise.resolve().then(function () { return mlsScore; });
 const _lazy_LITOQ3 = () => Promise.resolve().then(function () { return properties_get$1; });
 const _lazy_nvWSAx = () => Promise.resolve().then(function () { return uploadCsv_post$1; });
 const _lazy_hhrUI6 = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
   { route: '', handler: _ykNb3M, lazy: false, middleware: true, method: undefined },
+  { route: '/api/login', handler: _lazy_LBrAiR, lazy: true, middleware: false, method: "post" },
+  { route: '/api/mls-properties', handler: _lazy_WtdEqw, lazy: true, middleware: false, method: "get" },
+  { route: '/api/mls-score', handler: _lazy__6i3pz, lazy: true, middleware: false, method: undefined },
   { route: '/api/properties', handler: _lazy_LITOQ3, lazy: true, middleware: false, method: "get" },
   { route: '/api/upload-csv', handler: _lazy_nvWSAx, lazy: true, middleware: false, method: "post" },
   { route: '/__nuxt_error', handler: _lazy_hhrUI6, lazy: true, middleware: false, method: undefined },
@@ -1861,16 +1883,186 @@ const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: styles
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const login_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const password = body.password;
+  const config = useRuntimeConfig();
+  const sitePassword = config.SITE_PASSWORD;
+  console.log("Loaded password:", sitePassword);
+  if (password && password === sitePassword) {
+    setCookie(event, "auth", "1", { path: "/", httpOnly: false });
+    return { success: true };
+  } else {
+    return { success: false, error: "Incorrect password" };
+  }
+});
+
+const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: login_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+function scoreMLSProperty({ lotSize, bedrooms, bathrooms, price }) {
+  if (!price || price <= 0) return 0;
+  const sizeScore = lotSize / 1e3;
+  const bedScore = bedrooms * 2;
+  const bathScore = bathrooms * 1.5;
+  const valueScore = (sizeScore + bedScore + bathScore) / (price / 1e5);
+  return Math.round(valueScore * 100) / 100;
+}
+function scoreMLSProperties(properties) {
+  if (!properties.length) return [];
+  const lotSizes = properties.map((p) => p.lotSize || 0);
+  const bedrooms = properties.map((p) => p.bedrooms || 0);
+  const bathrooms = properties.map((p) => p.bathrooms || 0);
+  const prices = properties.map((p) => p.price || 0);
+  const proximities = properties.map((p) => typeof p.proximity === "number" ? p.proximity : Infinity);
+  const minLot = Math.min(...lotSizes), maxLot = Math.max(...lotSizes);
+  const minBed = Math.min(...bedrooms), maxBed = Math.max(...bedrooms);
+  const minBath = Math.min(...bathrooms), maxBath = Math.max(...bathrooms);
+  const minPrice = Math.min(...prices.filter((p) => p > 0)), maxPrice = Math.max(...prices);
+  const minProx = Math.min(...proximities), maxProx = Math.max(...proximities);
+  const norm = (val, min, max) => max > min ? (val - min) / (max - min) : 0;
+  const zoningWeights = {
+    "Residential": 1,
+    "Commercial": 0.7,
+    "Mixed": 0.85,
+    "Agricultural": 0.9,
+    "Other": 0.5
+  };
+  return properties.map((p) => {
+    var _a;
+    const lotScore = norm(p.lotSize || 0, minLot, maxLot);
+    const bedScore = norm(p.bedrooms || 0, minBed, maxBed);
+    const bathScore = norm(p.bathrooms || 0, minBath, maxBath);
+    const priceScore = 1 - norm(p.price || 0, minPrice, maxPrice);
+    const utilitiesBonus = p.utilitiesStubbed ? 1 : 0;
+    const zoningScore = p.zoning ? (_a = zoningWeights[p.zoning]) != null ? _a : 0.5 : 0.5;
+    const proximityScore = typeof p.proximity === "number" && isFinite(p.proximity) ? 1 - norm(p.proximity, minProx, maxProx) : 0.5;
+    const weights = {
+      lot: 0.22,
+      bedrooms: 0.16,
+      bathrooms: 0.13,
+      price: 0.15,
+      utilities: 0.12,
+      zoning: 0.12,
+      proximity: 0.1
+    };
+    const raw = lotScore * weights.lot + bedScore * weights.bedrooms + bathScore * weights.bathrooms + priceScore * weights.price + utilitiesBonus * weights.utilities + zoningScore * weights.zoning + proximityScore * weights.proximity;
+    const score = Math.round(Math.min(raw, 1) * 100);
+    const scoreBreakdown = {
+      lotScore: { value: lotScore, weight: weights.lot },
+      bedScore: { value: bedScore, weight: weights.bedrooms },
+      bathScore: { value: bathScore, weight: weights.bathrooms },
+      priceScore: { value: priceScore, weight: weights.price },
+      utilitiesBonus: { value: utilitiesBonus, weight: weights.utilities },
+      zoningScore: { value: zoningScore, weight: weights.zoning },
+      proximityScore: { value: proximityScore, weight: weights.proximity }
+    };
+    return { ...p, score, scoreBreakdown };
+  });
+}
+
+const mlsScore = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  scoreMLSProperties: scoreMLSProperties,
+  scoreMLSProperty: scoreMLSProperty
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const mlsProperties_get = defineEventHandler(async (event) => {
+  var _a, _b;
+  const API_KEY = "3283b3d126616f16424f1f1f0bc722e66e1af416";
+  const API_URL = "https://api-demo.mlsgrid.com/v2";
+  try {
+    const response = await $fetch(`${API_URL}/Property`, {
+      headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "Api-Version": "2.0",
+        "Content-Type": "application/json"
+      },
+      params: {
+        // MLS Grid API parameters - get all properties first to see what's available
+        $top: 50
+        // Get more properties to see what's available
+      }
+    });
+    console.log("MLS Grid API Response:", response);
+    console.log("Number of properties returned:", ((_a = response.value) == null ? void 0 : _a.length) || 0);
+    console.log("First property sample:", ((_b = response.value) == null ? void 0 : _b[0]) || "No properties found");
+    const residentialProperties = response.value.filter(
+      (prop) => prop.PropertyType === "Residential" && prop.BedroomsTotal > 0 && prop.LivingArea > 0
+    );
+    console.log("Residential properties with buildings:", residentialProperties.length);
+    const properties = residentialProperties.map((mlsProperty) => {
+      var _a2;
+      const bellinghamLat = 48.7519;
+      const bellinghamLng = -122.4787;
+      const propertyLat = mlsProperty.Latitude || 0;
+      const propertyLng = mlsProperty.Longitude || 0;
+      const proximity = propertyLat && propertyLng ? Math.sqrt(Math.pow(propertyLat - bellinghamLat, 2) + Math.pow(propertyLng - bellinghamLng, 2)) * 69 : 5;
+      const utilities = mlsProperty.Utilities || [];
+      const utilitiesStubbed = utilities.some(
+        (util) => util.toLowerCase().includes("electric") || util.toLowerCase().includes("water") || util.toLowerCase().includes("septic")
+      );
+      const address = mlsProperty.UnparsedAddress || ((_a2 = mlsProperty.PropertyAddress) == null ? void 0 : _a2.OneLine) || `${mlsProperty.StreetNumber || ""} ${mlsProperty.StreetName || ""}, ${mlsProperty.City || ""}, ${mlsProperty.StateOrProvince || ""}`;
+      return {
+        lotSize: parseFloat(mlsProperty.LotSizeAcres) || 0,
+        bedrooms: parseInt(mlsProperty.BedroomsTotal) || 0,
+        bathrooms: parseFloat(mlsProperty.BathroomsTotalInteger) || 0,
+        price: parseFloat(mlsProperty.ListPrice) || 0,
+        utilitiesStubbed,
+        zoning: "Residential",
+        // Default to residential for now
+        proximity,
+        address,
+        mlsId: mlsProperty.ListingKey,
+        listingDate: mlsProperty.ListingContractDate,
+        propertyType: mlsProperty.PropertyType,
+        propertySubType: mlsProperty.PropertySubType,
+        squareFootage: mlsProperty.LivingArea || 0,
+        // Additional MLS Grid specific fields
+        media: mlsProperty.Media || [],
+        status: mlsProperty.StandardStatus,
+        latitude: mlsProperty.Latitude,
+        longitude: mlsProperty.Longitude,
+        originalData: mlsProperty
+        // Keep original data for reference
+      };
+    });
+    const scoredProperties = scoreMLSProperties(properties);
+    return {
+      success: true,
+      properties: scoredProperties,
+      total: scoredProperties.length,
+      lastUpdated: (/* @__PURE__ */ new Date()).toISOString()
+    };
+  } catch (error) {
+    console.error("Error fetching MLS properties:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+      properties: [],
+      total: 0,
+      lastUpdated: (/* @__PURE__ */ new Date()).toISOString()
+    };
+  }
+});
+
+const mlsProperties_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: mlsProperties_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
 const CSV_URLS = [
   "https://raw.githubusercontent.com/coopergraddon/djdjmeetingmap/refs/heads/main/DJ%20DJ%20LLC%20Master%20Sheet(Completed).csv",
   "https://raw.githubusercontent.com/coopergraddon/djdjmeetingmap/refs/heads/main/DJ%20DJ%20LLC%20Master%20Sheet(Construction%20Stages).csv",
   "https://raw.githubusercontent.com/coopergraddon/djdjmeetingmap/refs/heads/main/DJ%20DJ%20LLC%20Master%20Sheet(Upcoming).csv"
 ];
 const properties_get = defineEventHandler(async (event) => {
-  var _a;
+  var _a, _b;
   try {
     const csvContents = await Promise.all(
-      CSV_URLS.map((url) => $fetch(url, { responseType: "text" }))
+      CSV_URLS.map((url) => $fetch$1(url, { responseType: "text" }))
     );
     let properties = [];
     for (const csvContent of csvContents) {
@@ -1898,6 +2090,15 @@ const properties_get = defineEventHandler(async (event) => {
               break;
             case "pm":
               property.pm = value;
+              break;
+            case "project manager":
+              property.pmName = value;
+              break;
+            case "pm phone number":
+              property.pmPhone = value;
+              break;
+            case "pm email":
+              property.pmEmail = value;
               break;
             case "address":
               property.address = value;
@@ -1959,6 +2160,12 @@ const properties_get = defineEventHandler(async (event) => {
             case "financial institution":
               property.financialInstitution = value;
               break;
+            case "latest updates":
+              property.latestUpdates = value;
+              break;
+            case "date comments added":
+              property.dateCommentsAdded = value;
+              break;
             default:
               property[header] = value;
           }
@@ -1983,6 +2190,54 @@ const properties_get = defineEventHandler(async (event) => {
       var _a2;
       return ((_a2 = p.phase) == null ? void 0 : _a2.toLowerCase()) !== "delete";
     });
+    const mergedMap = /* @__PURE__ */ new Map();
+    for (const prop of properties) {
+      const key = prop.apn || ((_b = prop.address) == null ? void 0 : _b.toLowerCase());
+      if (!key) continue;
+      if (!mergedMap.has(key)) {
+        mergedMap.set(key, { ...prop });
+      } else {
+        const existing = mergedMap.get(key);
+        for (const field of [
+          "financialInstitution",
+          "pm",
+          "pmName",
+          "pmPhone",
+          "pmEmail",
+          "address",
+          "apn",
+          "city",
+          "lot",
+          "sqft",
+          "client",
+          "phase",
+          "draw",
+          "notes",
+          "permitSubmitted",
+          "permitIssued",
+          "startDate",
+          "deadline",
+          "certOfOcc",
+          "completed",
+          "daysSinceStart",
+          "daysSinceSubmital",
+          "windowsOrdered",
+          "daysFromStartToFinish",
+          "latestUpdates",
+          "dateCommentsAdded",
+          "project",
+          "style",
+          "category",
+          "type",
+          "id"
+        ]) {
+          if ((!existing[field] || existing[field] === "") && prop[field]) {
+            existing[field] = prop[field];
+          }
+        }
+      }
+    }
+    properties = Array.from(mergedMap.values());
     return {
       success: true,
       properties,

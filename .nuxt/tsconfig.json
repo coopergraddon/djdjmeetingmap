@@ -159,7 +159,7 @@
     "../node_modules/@nuxt/telemetry/runtime",
     "../node_modules/@nuxt/telemetry/dist/runtime",
     ".."
-, "middleware"  ],
+  ],
   "exclude": [
     "../dist",
     "../.data",
