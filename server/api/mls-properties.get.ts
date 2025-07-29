@@ -69,12 +69,42 @@ export default defineEventHandler(async (event) => {
         propertyType: mlsProperty.PropertyType,
         propertySubType: mlsProperty.PropertySubType,
         squareFootage: mlsProperty.LivingArea || 0,
-        // Additional MLS Grid specific fields
+        // Additional MLS Grid specific fields (COMPLIANT - no prefixed fields)
         media: mlsProperty.Media || [],
         status: mlsProperty.StandardStatus,
         latitude: mlsProperty.Latitude,
         longitude: mlsProperty.Longitude,
-        originalData: mlsProperty // Keep original data for reference
+        // COMPLIANCE: Remove all NWM_ prefixed fields from public display
+        // Only include non-prefixed, publicly displayable fields
+        publicData: {
+          listingKey: mlsProperty.ListingKey,
+          address: address,
+          propertyType: mlsProperty.PropertyType,
+          propertySubType: mlsProperty.PropertySubType,
+          listPrice: mlsProperty.ListPrice,
+          bedrooms: mlsProperty.BedroomsTotal,
+          bathrooms: mlsProperty.BathroomsTotalInteger,
+          lotSize: mlsProperty.LotSizeAcres,
+          livingArea: mlsProperty.LivingArea,
+          status: mlsProperty.StandardStatus,
+          utilities: mlsProperty.Utilities,
+          latitude: mlsProperty.Latitude,
+          longitude: mlsProperty.Longitude,
+          listingDate: mlsProperty.ListingContractDate,
+          closeDate: mlsProperty.CloseDate,
+          closePrice: mlsProperty.ClosePrice,
+          city: mlsProperty.City,
+          state: mlsProperty.StateOrProvince,
+          postalCode: mlsProperty.PostalCode,
+          yearBuilt: mlsProperty.YearBuilt,
+          architecturalStyle: mlsProperty.ArchitecturalStyle,
+          exteriorFeatures: mlsProperty.ExteriorFeatures,
+          interiorFeatures: mlsProperty.InteriorFeatures,
+          lotFeatures: mlsProperty.LotFeatures,
+          view: mlsProperty.View,
+          waterfrontYN: mlsProperty.WaterfrontYN,
+          zoningDescription: mlsProperty.ZoningDescription
+        }
       };
     });
 

@@ -18,6 +18,21 @@
             <i class="fas fa-info-circle mr-1"></i>
             Real-time data from MLS Grid API - Properties scored based on lot size, bedrooms, bathrooms, price, utilities, zoning, and proximity to Bellingham
           </p>
+          <!-- NWMLS Compliance Notice -->
+          <div class="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div class="flex items-start">
+              <i class="fas fa-exclamation-triangle text-yellow-600 mt-1 mr-2"></i>
+              <div class="text-sm text-yellow-800">
+                <p class="font-semibold">NWMLS Data Use Compliance</p>
+                <p>This data is provided by Northwest MLS (NWMLS) through MLS Grid. All listings are subject to NWMLS Data Use Policy and Rules. 
+                Information is deemed reliable but not guaranteed. Data is for informational purposes only and should be verified independently.</p>
+                <p class="mt-2 text-xs">
+                  <i class="fas fa-shield-alt mr-1"></i>
+                  RESO Standards Compliant | NWMLS Data Use Policy | MLS Grid IDX Rules
+                </p>
+              </div>
+            </div>
+          </div>
           <div v-if="lastUpdated" class="mt-2 text-sm text-gray-500">
             <i class="fas fa-clock mr-1"></i>
             Last updated: {{ new Date(lastUpdated).toLocaleString() }}
@@ -168,6 +183,21 @@
           </div>
         </div>
       </div>
+     
+      <!-- NWMLS Attribution Footer - Required by Data Use Policy -->
+      <footer class="mt-12 py-6 border-t border-gray-200">
+        <div class="text-center text-sm text-gray-600">
+          <p class="mb-2">
+            <i class="fas fa-database mr-1"></i>
+            Data provided by Northwest MLS (NWMLS) through MLS Grid
+          </p>
+          <p class="text-xs text-gray-500">
+            © {{ new Date().getFullYear() }} Northwest MLS. All rights reserved. 
+            Information is deemed reliable but not guaranteed. 
+            Subject to NWMLS Data Use Policy and Rules.
+          </p>
+        </div>
+      </footer>
     </main>
   </div>
 </template>

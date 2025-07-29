@@ -46,7 +46,8 @@ export default defineEventHandler(async (event) => {
       success: true,
       totalProperties: response.value.length,
       hasMoreData: !!response['@odata.nextLink'],
-      allAvailableFields: allFields,
+      // COMPLIANCE: Filter out NWM_ prefixed fields from public display
+      allAvailableFields: allFields.filter(field => !field.startsWith('NWM_')),
       sampleProperties: sampleProperties,
       rawSample: firstProperty ? {
         listingKey: firstProperty.ListingKey,

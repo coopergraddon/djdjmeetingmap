@@ -1120,16 +1120,16 @@ __uECFbb2YNEBQHWUf8iZbQklmqHW4r2hsfgkdsgag
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"18833-d2giKl+wXzRbefIIEnJH/82T4eY\"",
-    "mtime": "2025-07-29T20:58:59.391Z",
-    "size": 100403,
+    "etag": "\"18dcd-LkRrTKSYIpJhUetTpJQO+0Xt9rI\"",
+    "mtime": "2025-07-29T21:11:42.213Z",
+    "size": 101837,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"5d000-vwoWVTo4cUiUAhXgWKIDRhIPABs\"",
-    "mtime": "2025-07-29T20:58:59.391Z",
-    "size": 380928,
+    "etag": "\"5ea5a-U++E8qWbtKCUYBu9bc+yl0jnvpM\"",
+    "mtime": "2025-07-29T21:11:42.213Z",
+    "size": 387674,
     "path": "index.mjs.map"
   }
 };
@@ -1945,7 +1945,8 @@ const mlsExplorer_get = defineEventHandler(async (event) => {
       success: true,
       totalProperties: response.value.length,
       hasMoreData: !!response["@odata.nextLink"],
-      allAvailableFields: allFields,
+      // COMPLIANCE: Filter out NWM_ prefixed fields from public display
+      allAvailableFields: allFields.filter((field) => !field.startsWith("NWM_")),
       sampleProperties,
       rawSample: firstProperty ? {
         listingKey: firstProperty.ListingKey,
@@ -2104,13 +2105,42 @@ const mlsProperties_get = defineEventHandler(async (event) => {
         propertyType: mlsProperty.PropertyType,
         propertySubType: mlsProperty.PropertySubType,
         squareFootage: mlsProperty.LivingArea || 0,
-        // Additional MLS Grid specific fields
+        // Additional MLS Grid specific fields (COMPLIANT - no prefixed fields)
         media: mlsProperty.Media || [],
         status: mlsProperty.StandardStatus,
         latitude: mlsProperty.Latitude,
         longitude: mlsProperty.Longitude,
-        originalData: mlsProperty
-        // Keep original data for reference
+        // COMPLIANCE: Remove all NWM_ prefixed fields from public display
+        // Only include non-prefixed, publicly displayable fields
+        publicData: {
+          listingKey: mlsProperty.ListingKey,
+          address,
+          propertyType: mlsProperty.PropertyType,
+          propertySubType: mlsProperty.PropertySubType,
+          listPrice: mlsProperty.ListPrice,
+          bedrooms: mlsProperty.BedroomsTotal,
+          bathrooms: mlsProperty.BathroomsTotalInteger,
+          lotSize: mlsProperty.LotSizeAcres,
+          livingArea: mlsProperty.LivingArea,
+          status: mlsProperty.StandardStatus,
+          utilities: mlsProperty.Utilities,
+          latitude: mlsProperty.Latitude,
+          longitude: mlsProperty.Longitude,
+          listingDate: mlsProperty.ListingContractDate,
+          closeDate: mlsProperty.CloseDate,
+          closePrice: mlsProperty.ClosePrice,
+          city: mlsProperty.City,
+          state: mlsProperty.StateOrProvince,
+          postalCode: mlsProperty.PostalCode,
+          yearBuilt: mlsProperty.YearBuilt,
+          architecturalStyle: mlsProperty.ArchitecturalStyle,
+          exteriorFeatures: mlsProperty.ExteriorFeatures,
+          interiorFeatures: mlsProperty.InteriorFeatures,
+          lotFeatures: mlsProperty.LotFeatures,
+          view: mlsProperty.View,
+          waterfrontYN: mlsProperty.WaterfrontYN,
+          zoningDescription: mlsProperty.ZoningDescription
+        }
       };
     });
     const scoredProperties = scoreMLSProperties(properties);
