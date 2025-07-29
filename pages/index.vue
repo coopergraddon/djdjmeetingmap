@@ -429,8 +429,10 @@ function cacheSearchState() {
 onMounted(async () => {
   await nextTick();
   
+  console.log('Page mounted, route query:', route.query);
   // Check for view query parameter
   if (route.query.view === 'list') {
+    console.log('Setting view to list from query parameter');
     currentView.value = 'list';
   }
   
@@ -446,7 +448,9 @@ onMounted(async () => {
 
 // Watch for route changes to handle navigation back from property details
 watch(() => route.query.view, (newView) => {
+  console.log('Route query view changed to:', newView);
   if (newView === 'list') {
+    console.log('Setting view to list from route change');
     currentView.value = 'list';
   }
 });

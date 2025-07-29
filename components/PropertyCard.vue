@@ -94,6 +94,13 @@ const emit = defineEmits(['view-arcgis']);
 const { getPhaseColor, getPhaseIcon, searchTerm, searchField, selectedPhase, completionFrom, completionTo } = useProperties();
 
 function cacheSearchState() {
+  console.log('cacheSearchState called with current state:', {
+    searchTerm: searchTerm.value,
+    searchField: searchField.value,
+    selectedPhase: selectedPhase.value,
+    completionFrom: completionFrom.value,
+    completionTo: completionTo.value
+  });
   const state = {
     searchTerm: searchTerm.value,
     searchField: searchField.value,
@@ -102,5 +109,6 @@ function cacheSearchState() {
     completionTo: completionTo.value
   };
   sessionStorage.setItem('propertySearchState', JSON.stringify(state));
+  console.log('Saved to sessionStorage:', state);
 }
 </script> 
