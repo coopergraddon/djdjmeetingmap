@@ -1120,16 +1120,16 @@ __uECFbb2YNEBQHWUf8iZbQklmqHW4r2hsfgkdsgag
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"180b1-vgbatXV/MqymsfF68RwHhLVgkAM\"",
-    "mtime": "2025-07-29T20:47:33.136Z",
-    "size": 98481,
+    "etag": "\"18833-d2giKl+wXzRbefIIEnJH/82T4eY\"",
+    "mtime": "2025-07-29T20:58:59.391Z",
+    "size": 100403,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"5b507-8zl9BCGarr0bC3BHJDIF1H9p3ys\"",
-    "mtime": "2025-07-29T20:47:33.136Z",
-    "size": 374023,
+    "etag": "\"5d000-vwoWVTo4cUiUAhXgWKIDRhIPABs\"",
+    "mtime": "2025-07-29T20:58:59.391Z",
+    "size": 380928,
     "path": "index.mjs.map"
   }
 };
@@ -1540,6 +1540,7 @@ async function getIslandContext(event) {
 }
 
 const _lazy_LBrAiR = () => Promise.resolve().then(function () { return login_post$1; });
+const _lazy_DOkZZ1 = () => Promise.resolve().then(function () { return mlsExplorer_get$1; });
 const _lazy_WtdEqw = () => Promise.resolve().then(function () { return mlsProperties_get$1; });
 const _lazy__6i3pz = () => Promise.resolve().then(function () { return mlsScore; });
 const _lazy_LITOQ3 = () => Promise.resolve().then(function () { return properties_get$1; });
@@ -1549,6 +1550,7 @@ const _lazy_hhrUI6 = () => Promise.resolve().then(function () { return renderer$
 const handlers = [
   { route: '', handler: _ykNb3M, lazy: false, middleware: true, method: undefined },
   { route: '/api/login', handler: _lazy_LBrAiR, lazy: true, middleware: false, method: "post" },
+  { route: '/api/mls-explorer', handler: _lazy_DOkZZ1, lazy: true, middleware: false, method: "get" },
   { route: '/api/mls-properties', handler: _lazy_WtdEqw, lazy: true, middleware: false, method: "get" },
   { route: '/api/mls-score', handler: _lazy__6i3pz, lazy: true, middleware: false, method: undefined },
   { route: '/api/properties', handler: _lazy_LITOQ3, lazy: true, middleware: false, method: "get" },
@@ -1902,6 +1904,87 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
   default: login_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const mlsExplorer_get = defineEventHandler(async (event) => {
+  const API_KEY = "3283b3d126616f16424f1f1f0bc722e66e1af416";
+  const API_URL = "https://api-demo.mlsgrid.com/v2";
+  try {
+    const response = await $fetch(`${API_URL}/Property`, {
+      headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "Api-Version": "2.0",
+        "Content-Type": "application/json",
+        "Accept-Encoding": "gzip"
+      },
+      params: {
+        $top: 10
+      }
+    });
+    const firstProperty = response.value[0];
+    const allFields = firstProperty ? Object.keys(firstProperty) : [];
+    const sampleProperties = response.value.slice(0, 5).map((prop) => ({
+      listingKey: prop.ListingKey,
+      address: prop.UnparsedAddress || "No address",
+      propertyType: prop.PropertyType,
+      propertySubType: prop.PropertySubType,
+      listPrice: prop.ListPrice,
+      bedrooms: prop.BedroomsTotal,
+      bathrooms: prop.BathroomsTotalInteger,
+      lotSize: prop.LotSizeAcres,
+      livingArea: prop.LivingArea,
+      status: prop.StandardStatus,
+      city: prop.City,
+      state: prop.StateOrProvince,
+      utilities: prop.Utilities,
+      latitude: prop.Latitude,
+      longitude: prop.Longitude,
+      listingDate: prop.ListingContractDate,
+      closeDate: prop.CloseDate,
+      closePrice: prop.ClosePrice
+    }));
+    return {
+      success: true,
+      totalProperties: response.value.length,
+      hasMoreData: !!response["@odata.nextLink"],
+      allAvailableFields: allFields,
+      sampleProperties,
+      rawSample: firstProperty ? {
+        listingKey: firstProperty.ListingKey,
+        address: firstProperty.UnparsedAddress,
+        propertyType: firstProperty.PropertyType,
+        listPrice: firstProperty.ListPrice,
+        bedrooms: firstProperty.BedroomsTotal,
+        bathrooms: firstProperty.BathroomsTotalInteger,
+        lotSize: firstProperty.LotSizeAcres,
+        livingArea: firstProperty.LivingArea,
+        status: firstProperty.StandardStatus,
+        utilities: firstProperty.Utilities,
+        // Include a few more key fields
+        appliances: firstProperty.Appliances,
+        architecturalStyle: firstProperty.ArchitecturalStyle,
+        exteriorFeatures: firstProperty.ExteriorFeatures,
+        interiorFeatures: firstProperty.InteriorFeatures,
+        lotFeatures: firstProperty.LotFeatures,
+        view: firstProperty.View,
+        waterfrontYN: firstProperty.WaterfrontYN,
+        yearBuilt: firstProperty.YearBuilt,
+        zoningDescription: firstProperty.ZoningDescription
+      } : null
+    };
+  } catch (error) {
+    console.error("Error exploring MLS data:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+      note: "This endpoint helps explore the MLS Grid API data structure"
+    };
+  }
+});
+
+const mlsExplorer_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: mlsExplorer_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
 function scoreMLSProperty({ lotSize, bedrooms, bathrooms, price }) {
   if (!price || price <= 0) return 0;
   const sizeScore = lotSize / 1e3;
@@ -1978,7 +2061,8 @@ const mlsProperties_get = defineEventHandler(async (event) => {
       headers: {
         "Authorization": `Bearer ${API_KEY}`,
         "Api-Version": "2.0",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Accept-Encoding": "gzip"
       },
       params: {
         // MLS Grid API parameters - get all properties first to see what's available

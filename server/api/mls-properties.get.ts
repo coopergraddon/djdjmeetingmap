@@ -10,7 +10,8 @@ export default defineEventHandler(async (event) => {
       headers: {
         'Authorization': `Bearer ${API_KEY}`,
         'Api-Version': '2.0',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept-Encoding': 'gzip'
       },
       params: {
         // MLS Grid API parameters - get all properties first to see what's available

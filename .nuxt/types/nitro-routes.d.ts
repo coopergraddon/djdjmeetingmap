@@ -6,6 +6,9 @@ declare module "nitropack/types" {
     '/api/login': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/login.post').default>>>>
     }
+    '/api/mls-explorer': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/mls-explorer.get').default>>>>
+    }
     '/api/mls-properties': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/mls-properties.get').default>>>>
     }
