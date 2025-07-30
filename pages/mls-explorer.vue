@@ -16,10 +16,10 @@
           <p class="text-gray-600">Explore and verify the MLS Grid API data structure</p>
         </div>
         <div class="flex gap-3">
-          <NuxtLink to="/mls" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 shadow-lg">
-            <i class="fas fa-chart-line"></i>
-            <span>View Scored Properties</span>
-          </NuxtLink>
+          <a href="https://onesearch.vercel.app" target="_blank" rel="noopener noreferrer" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 shadow-lg">
+            <i class="fas fa-external-link-alt"></i>
+            <span>Go to MLS Search</span>
+          </a>
           <NuxtLink to="/" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 shadow-lg">
             <i class="fas fa-arrow-left"></i>
             <span>Back to Dashboard</span>

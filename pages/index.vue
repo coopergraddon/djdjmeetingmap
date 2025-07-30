@@ -93,15 +93,15 @@
             <div class="text-gray-600 font-medium">Completed</div>
             <div class="mt-2 text-sm text-purple-600">Finished Projects</div>
           </div>
-          <!-- MLS Properties Button as NuxtLink -->
-          <NuxtLink to="/mls" class="stats-card card-hover rounded-2xl p-8 text-center cursor-pointer">
+          <!-- MLS Properties Button - External Link -->
+          <a href="https://onesearch.vercel.app" target="_blank" rel="noopener noreferrer" class="stats-card card-hover rounded-2xl p-8 text-center cursor-pointer">
             <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center">
               <i class="fas fa-building text-2xl text-white"></i>
             </div>
             <div class="text-3xl font-bold text-gray-900 mb-2">MLS</div>
             <div class="text-gray-600 font-medium">MLS Properties</div>
-            <div class="mt-2 text-sm text-pink-600">Whatcom County</div>
-          </NuxtLink>
+            <div class="mt-2 text-sm text-pink-600">External Search</div>
+          </a>
         </div>
 
         <!-- Phase Distribution Chart -->
